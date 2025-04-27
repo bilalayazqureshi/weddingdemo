@@ -8,7 +8,13 @@ import com.example.demo.model.WeddingEvent;
 class tempTest {
 
 	@Test
- 	public void test() {
- 		assertNotNull(new WeddingEvent(1L, "Bilal's event","1-1-25", "florence"));
- 	}
+	public void testWeddingEventCreation() {
+		WeddingEvent weddingEvent = new WeddingEvent(1L, "My Wedding", "2025-06-25", "Beachside Resort");
+
+		assertNotNull(weddingEvent);
+		assertEquals(1L, weddingEvent.getId());
+		assertEquals("My Wedding", weddingEvent.getName());
+		assertEquals("2025-06-25", weddingEvent.getDate());
+		assertEquals("Beachside Resort", weddingEvent.getLocation());
+	}
 }
