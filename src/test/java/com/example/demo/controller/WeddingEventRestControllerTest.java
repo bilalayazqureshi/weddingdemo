@@ -22,7 +22,7 @@ class WeddingEventRestControllerTest {
 
 	@Test
 	public void testAllWeddingEventEmpty() throws Exception {
-		this.mvc.perform(get("/api/weddingevent").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+		this.mvc.perform(get("/api/weddingEvent").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(content().json("[]")); // Checks that the /api/guests endpoint returns an empty JSON list
 	}
 }
