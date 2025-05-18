@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +22,9 @@ public class WeddingEventRestController {
 	public List<WeddingEvent> allWeddingEvents() {
 		return weddingEventService.getAllWeddingEvents();
 	}
-	
 
+	@GetMapping("/{id}")
+	public WeddingEvent weddingEvent(@PathVariable long id) {
+		return weddingEventService.getWeddingEventById(id);
+	}
 }
