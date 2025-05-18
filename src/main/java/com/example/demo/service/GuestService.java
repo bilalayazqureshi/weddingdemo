@@ -13,8 +13,20 @@ public class GuestService {
 	public List<Guest> getAllGuests() {
 		throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
 	}
-	
+
 	public Guest getGuestById(long id) {
+		throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
+	}
+
+	public Guest insertNewGuest(Guest guest) {
+		throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
+	}
+
+	public Guest updateGuestById(long id, Guest replacement) {
+		throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
+	}
+
+	public void deleteGuestById(long id) {
 		throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
 	}
 }

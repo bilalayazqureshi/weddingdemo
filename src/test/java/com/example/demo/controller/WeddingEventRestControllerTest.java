@@ -1,9 +1,14 @@
 package com.example.demo.controller;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -63,5 +68,66 @@ class WeddingEventRestControllerTest {
 
 		this.mvc.perform(get("/api/weddingevents/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(content().string(""));
+	}
+
+	@Test
+	public void testCreateWeddingEvent() throws Exception {
+		when(weddingEventService.insertNewWeddingEvent(any(WeddingEvent.class)))
+				.thenReturn(new WeddingEvent(3L, "Brown Wedding", "2025-08-10", "Chicago"));
+
+		String newEventJson = """
+				{
+				  "name":"Brown Wedding",
+				  "date":"2025-08-10",
+				  "location":"Chicago"
+				}
+				""";
+
+		this.mvc.perform(post("/api/weddingevents/new").contentType(MediaType.APPLICATION_JSON).content(newEventJson))
+				.andExpect(jsonPath("$.id", is(3)))
+				.andExpect(jsonPath("$.name", is("Brown Wedding"))).andExpect(jsonPath("$.date", is("2025-08-10")))
+				.andExpect(jsonPath("$.location", is("Chicago")));
+	}
+
+	@Test
+	public void testUpdateWeddingEventExisting() throws Exception {
+		when(weddingEventService.updateWeddingEventById(anyLong(), any(WeddingEvent.class)))
+				.thenReturn(new WeddingEvent(1L, "Smith Wedding VIP", "2025-06-20", "New York"));
+
+		String updateJson = """
+				{
+				  "name":"Smith Wedding VIP",
+				  "date":"2025-06-20",
+				  "location":"New York"
+				}
+				""";
+
+		this.mvc.perform(put("/api/weddingevents/1").contentType(MediaType.APPLICATION_JSON).content(updateJson))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.id", is(1)))
+				.andExpect(jsonPath("$.name", is("Smith Wedding VIP"))).andExpect(jsonPath("$.date", is("2025-06-20")))
+				.andExpect(jsonPath("$.location", is("New York")));
+	}
+
+	@Test
+	public void testUpdateWeddingEventNotFound() throws Exception {
+		when(weddingEventService.updateWeddingEventById(anyLong(), any(WeddingEvent.class))).thenReturn(null);
+
+		String updateJson = """
+				{
+				  "name":"Nonexistent",
+				  "date":"2025-12-31",
+				  "location":"Nowhere"
+				}
+				""";
+
+		this.mvc.perform(put("/api/weddingevents/99").contentType(MediaType.APPLICATION_JSON).content(updateJson))
+				.andExpect(status().isOk()).andExpect(content().string(""));
+	}
+
+	@Test
+	public void testDeleteWeddingEvent() throws Exception {
+		doNothing().when(weddingEventService).deleteWeddingEventById(anyLong());
+
+		this.mvc.perform(delete("/api/weddingevents/1")).andExpect(status().isOk()).andExpect(content().string(""));
 	}
 }

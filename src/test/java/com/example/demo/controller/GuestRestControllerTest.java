@@ -1,9 +1,14 @@
 package com.example.demo.controller;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,6 +64,55 @@ class GuestRestControllerTest {
 
 		this.mvc.perform(get("/api/guests/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(content().string("")); // no body when not found
+	}
+
+	@Test
+	public void testCreateGuest() throws Exception {
+		when(guestService.insertNewGuest(any(Guest.class)))
+				.thenReturn(new Guest(3L, "Bob Brown", "bob.brown@example.com"));
+
+		String newGuestJson = """
+				{
+				  "name":"Bob Brown",
+				  "email":"bob.brown@example.com"
+				}
+				""";
+
+		this.mvc.perform(post("/api/guests/new").contentType(MediaType.APPLICATION_JSON).content(newGuestJson))
+
+				.andExpect(jsonPath("$.id", is(3))).andExpect(jsonPath("$.name", is("Bob Brown")))
+				.andExpect(jsonPath("$.email", is("bob.brown@example.com")));
+	}
+
+	@Test
+	public void testUpdateGuestExisting() throws Exception {
+		when(guestService.updateGuestById(anyLong(), any(Guest.class)))
+				.thenReturn(new Guest(1L, "John Doe Jr.", "john.jr@example.com"));
+
+		String updateJson = "{\"name\":\"John Doe Jr.\",\"email\":\"john.jr@example.com\"}";
+
+		this.mvc.perform(put("/api/guests/1").contentType(MediaType.APPLICATION_JSON).content(updateJson))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.id", is(1)))
+				.andExpect(jsonPath("$.name", is("John Doe Jr.")))
+				.andExpect(jsonPath("$.email", is("john.jr@example.com")));
+	}
+
+	@Test
+	public void testUpdateGuestNotFound() throws Exception {
+		when(guestService.updateGuestById(anyLong(), any(Guest.class))).thenReturn(null);
+
+		String updateJson = "{\"name\":\"Nobody\",\"email\":\"none@example.com\"}";
+
+		this.mvc.perform(put("/api/guests/99").contentType(MediaType.APPLICATION_JSON).content(updateJson))
+				.andExpect(status().isOk()).andExpect(content().string(""));
+	}
+
+	@Test
+	public void testDeleteGuest() throws Exception {
+		doNothing().when(guestService).deleteGuestById(anyLong());
+
+		this.mvc.perform(delete("/api/guests/1")).andExpect(status().isOk()).andExpect(content().string(""));
+
 	}
 
 }
