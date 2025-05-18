@@ -1,8 +1,11 @@
 package com.example.demo.controller;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
@@ -42,5 +45,23 @@ class WeddingEventRestControllerTest {
 						+ "{\"id\":1,\"name\":\"Smith Wedding\",\"date\":\"2025-06-20\",\"location\":\"New York\"},"
 						+ "{\"id\":2,\"name\":\"Johnson Wedding\",\"date\":\"2025-07-15\",\"location\":\"Los Angeles\"}"
 						+ "]"));
+	}
+
+	@Test
+	public void testOneWeddingEventByIdWithExistingEvent() throws Exception {
+		when(weddingEventService.getWeddingEventById(anyLong()))
+				.thenReturn(new WeddingEvent(1L, "Smith Wedding", "2025-06-20", "New York"));
+
+		this.mvc.perform(get("/api/weddingevents/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id", is(1))).andExpect(jsonPath("$.name", is("Smith Wedding")))
+				.andExpect(jsonPath("$.date", is("2025-06-20"))).andExpect(jsonPath("$.location", is("New York")));
+	}
+
+	@Test
+	public void testOneWeddingEventByIdWithNotFoundEvent() throws Exception {
+		when(weddingEventService.getWeddingEventById(anyLong())).thenReturn(null);
+
+		this.mvc.perform(get("/api/weddingevents/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(content().string(""));
 	}
 }

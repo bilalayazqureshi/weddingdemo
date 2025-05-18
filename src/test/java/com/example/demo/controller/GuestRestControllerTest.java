@@ -1,8 +1,11 @@
 package com.example.demo.controller;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
@@ -40,4 +43,22 @@ class GuestRestControllerTest {
 				.andExpect(content().json("[" + "{\"id\":1,\"name\":\"John Doe\",\"email\":\"john.doe@example.com\"},"
 						+ "{\"id\":2,\"name\":\"Alice Smith\",\"email\":\"alice.smith@example.com\"}" + "]"));
 	}
+
+	@Test
+	public void testOneGuestByIdWithExistingGuest() throws Exception {
+		when(guestService.getGuestById(anyLong())).thenReturn(new Guest(1L, "John Doe", "john.doe@example.com"));
+
+		this.mvc.perform(get("/api/guests/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id", is(1))).andExpect(jsonPath("$.name", is("John Doe")))
+				.andExpect(jsonPath("$.email", is("john.doe@example.com")));
+	}
+
+	@Test
+	public void testOneGuestByIdWithNotFoundGuest() throws Exception {
+		when(guestService.getGuestById(anyLong())).thenReturn(null);
+
+		this.mvc.perform(get("/api/guests/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(content().string("")); // no body when not found
+	}
+
 }

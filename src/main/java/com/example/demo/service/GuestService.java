@@ -13,4 +13,8 @@ public class GuestService {
 	public List<Guest> getAllGuests() {
 		throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
 	}
+	
+	public Guest getGuestById(long id) {
+		throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
+	}
 }
