@@ -1,29 +1,35 @@
 package com.example.demo.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import com.example.demo.model.Guest;
-import org.slf4j.LoggerFactory;
+import com.example.demo.model.WeddingEvent;
+
 @DataJpaTest
-class GuestJpaTest {
+class WeddingEventJpaTest {
 
 	@Autowired
 	private TestEntityManager entityManager;
 
 	@Test
 	public void testJpaMapping() {
-		Guest saved = entityManager.persistFlushFind(new Guest(null, "test", "test@example.com"));
+		WeddingEvent saved = entityManager
+				.persistFlushFind(new WeddingEvent(null, "test",LocalDate.of(2025, 1, 1), "testLocation"));
 
 		assertThat(saved.getName()).isEqualTo("test");
-		assertThat(saved.getEmail()).isEqualTo("test@example.com");
+		assertThat(saved.getDate()).isEqualTo(LocalDate.of(2025, 1, 1));
+		assertThat(saved.getLocation()).isEqualTo("testLocation");
 		assertThat(saved.getId()).isNotNull();
 		assertThat(saved.getId()).isPositive();
 		// just to see the generated identifier
-		LoggerFactory.getLogger(GuestJpaTest.class).info("Saved: " + saved.toString());
+		LoggerFactory.getLogger(WeddingEventJpaTest.class).info("Saved: " + saved.toString());
 	}
 
 }

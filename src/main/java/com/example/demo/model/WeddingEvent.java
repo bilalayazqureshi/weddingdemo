@@ -1,17 +1,39 @@
 package com.example.demo.model;
 
-import java.util.Objects;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "wedding_event")
 public class WeddingEvent {
 
+	@Id
+	@GeneratedValue
 	private Long id;
 	private String name;
-	private String date;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate date;
 	private String location;
+	@ManyToMany
+	@JoinTable(name = "event_guest", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "guest_id"))
 	private List<Guest> guests;
 
-	public WeddingEvent(Long id, String name, String date, String location) {
+	public WeddingEvent() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public WeddingEvent(Long id, String name, LocalDate date, String location) {
 		this.id = id;
 		this.name = name;
 		this.date = date;
@@ -26,7 +48,7 @@ public class WeddingEvent {
 		return name;
 	}
 
-	public String getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
@@ -46,7 +68,7 @@ public class WeddingEvent {
 		this.name = name;
 	}
 
-	public void setDate(String date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
