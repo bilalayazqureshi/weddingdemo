@@ -184,8 +184,7 @@
 				</executions>
 				<configuration>
 					<targetTests>
-						<param>
-							com.example.demo.service.*</param>
+
 					</targetTests>
 					<testPlugin>junit5</testPlugin>
 					<verbose>true</verbose>
