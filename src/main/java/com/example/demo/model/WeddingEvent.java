@@ -1,23 +1,26 @@
 package com.example.demo.model;
 
-import java.util.Objects;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 public class WeddingEvent {
 
 	private Long id;
 	private String name;
-	private String date;
+	private LocalDate date;
 	private String location;
 	private List<Guest> guests;
 
-	public WeddingEvent(Long id, String name, String date, String location) {
+	public WeddingEvent(Long id, String name, LocalDate date, String location) {
 		this.id = id;
 		this.name = name;
 		this.date = date;
 		this.location = location;
 	}
-
+	public WeddingEvent() {
+		// TODO Auto-generated constructor stub
+	}
 	public Long getId() {
 		return id;
 	}
@@ -26,7 +29,7 @@ public class WeddingEvent {
 		return name;
 	}
 
-	public String getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
@@ -46,7 +49,7 @@ public class WeddingEvent {
 		this.name = name;
 	}
 
-	public void setDate(String date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
