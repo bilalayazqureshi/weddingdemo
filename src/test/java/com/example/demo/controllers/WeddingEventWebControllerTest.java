@@ -38,12 +38,12 @@ class WeddingEventWebControllerTest {
 
 	@Test
 	void testStatus200_ListView() throws Exception {
-		mvc.perform(get("/events")).andExpect(status().is2xxSuccessful());
+		mvc.perform(get("/")).andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
 	void testReturnEventView() throws Exception {
-		ModelAndViewAssert.assertViewName(mvc.perform(get("/events")).andReturn().getModelAndView(), "weddingevent");
+		ModelAndViewAssert.assertViewName(mvc.perform(get("/")).andReturn().getModelAndView(), "index");
 	}
 
 	@Test
@@ -51,7 +51,7 @@ class WeddingEventWebControllerTest {
 		List<WeddingEvent> events = asList(new WeddingEvent(1L, "E1", LocalDate.of(2025, 10, 10), "Rome"));
 		when(weddingEventService.getAllEvents()).thenReturn(events);
 
-		mvc.perform(get("/events")).andExpect(view().name("weddingevent"))
+		mvc.perform(get("/")).andExpect(view().name("index"))
 				.andExpect(model().attribute("events", events)).andExpect(model().attribute("message", ""));
 	}
 
@@ -59,7 +59,7 @@ class WeddingEventWebControllerTest {
 	void test_ListView_ShowsMessageWhenNoEvents() throws Exception {
 		when(weddingEventService.getAllEvents()).thenReturn(emptyList());
 
-		mvc.perform(get("/events")).andExpect(view().name("weddingevent"))
+		mvc.perform(get("/")).andExpect(view().name("index"))
 				.andExpect(model().attribute("events", emptyList()))
 				.andExpect(model().attribute("message", "No event"));
 	}
@@ -69,7 +69,7 @@ class WeddingEventWebControllerTest {
 		WeddingEvent evt = new WeddingEvent(2L, "E2", LocalDate.of(2025, 11, 5), "Venice");
 		when(weddingEventService.getEventById(2L)).thenReturn(evt);
 
-		mvc.perform(get("/events/edit/2")).andExpect(view().name("edit_event"))
+		mvc.perform(get("/edit/2")).andExpect(view().name("edit_event"))
 				.andExpect(model().attribute("event", evt)).andExpect(model().attribute("message", ""));
 	}
 
@@ -77,30 +77,30 @@ class WeddingEventWebControllerTest {
 	void test_EditEvent_WhenNotFound() throws Exception {
 		when(weddingEventService.getEventById(3L)).thenReturn(null);
 
-		mvc.perform(get("/events/edit/3")).andExpect(view().name("edit_event"))
+		mvc.perform(get("/edit/3")).andExpect(view().name("edit_event"))
 				.andExpect(model().attribute("event", nullValue()))
 				.andExpect(model().attribute("message", "No event found with id: 3"));
 	}
 
 	@Test
 	void test_EditNewEvent() throws Exception {
-		mvc.perform(get("/events/new")).andExpect(view().name("weddingevent"))
+		mvc.perform(get("/new")).andExpect(view().name("index"))
 				.andExpect(model().attribute("event", new WeddingEvent())).andExpect(model().attribute("message", ""));
 		verifyNoMoreInteractions(weddingEventService);
 	}
 
 	@Test
 	void test_PostEventWithoutId_ShouldInsertNewEvent() throws Exception {
-		mvc.perform(post("/events/save").param("name", "E3").param("date", "2025-12-12").param("location", "Milan"))
-				.andExpect(view().name("redirect:/events"));
+		mvc.perform(post("/save").param("name", "E3").param("date", "2025-12-12").param("location", "Milan"))
+				.andExpect(view().name("redirect:/index"));
 
 		verify(weddingEventService).insertNewEvent(new WeddingEvent(null, "E3", LocalDate.of(2025, 12, 12), "Milan"));
 	}
 
 	@Test
 	void test_PostEventWithId_ShouldUpdateExistingEvent() throws Exception {
-		mvc.perform(post("/events/save").param("id", "4").param("name", "E4").param("date", "2025-12-25")
-				.param("location", "Florence")).andExpect(view().name("redirect:/events"));
+		mvc.perform(post("/save").param("id", "4").param("name", "E4").param("date", "2025-12-25")
+				.param("location", "Florence")).andExpect(view().name("redirect:/index"));
 
 		verify(weddingEventService).updateEventById(4L,
 				new WeddingEvent(4L, "E4", LocalDate.of(2025, 12, 25), "Florence"));
@@ -108,8 +108,8 @@ class WeddingEventWebControllerTest {
 
 	@Test
 	void test_DeleteEvent() throws Exception {
-		mvc.perform(delete("/events/delete/5")).andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/events"));
+		mvc.perform(delete("/delete/5")).andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/index"));
 
 		verify(weddingEventService).deleteEventById(5L);
 	}

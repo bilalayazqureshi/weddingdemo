@@ -15,7 +15,7 @@ import com.example.demo.model.WeddingEvent;
 import com.example.demo.services.WeddingEventService;
 
 @Controller
-@RequestMapping("/events")
+@RequestMapping("/")
 public class WeddingEventWebController {
 	private static final String MESSAGE_ATTRIBUTE = "message";
 	private static final String EVENT_ATTRIBUTE = "event";
@@ -29,7 +29,7 @@ public class WeddingEventWebController {
 		List<WeddingEvent> allEvents = weddingEventService.getAllEvents();
 		model.addAttribute(EVENTS_ATTRIBUTE, allEvents);
 		model.addAttribute(MESSAGE_ATTRIBUTE, allEvents.isEmpty() ? "No event" : "");
-		return "weddingevent";
+		return "index";
 	}
 
 	@GetMapping("/edit/{id}")
@@ -44,7 +44,7 @@ public class WeddingEventWebController {
 	public String newEvent(Model model) {
 		model.addAttribute(EVENT_ATTRIBUTE, new WeddingEvent());
 		model.addAttribute(MESSAGE_ATTRIBUTE, "");
-		return "weddingevent";
+		return "index";
 	}
 
 	@PostMapping("/save")
@@ -54,13 +54,13 @@ public class WeddingEventWebController {
 		} else {
 			weddingEventService.updateEventById(event.getId(), event);
 		}
-		return "redirect:/events";
+		return "redirect:/index";
 	}
 
 	@DeleteMapping("/delete/{id}")
 	public String deleteEvent(@PathVariable long id) {
 		weddingEventService.deleteEventById(id);
-		return "redirect:/events";
+		return "redirect:/index";
 	}
 
 }
