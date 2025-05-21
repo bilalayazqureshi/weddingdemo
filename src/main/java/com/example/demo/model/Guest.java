@@ -14,6 +14,10 @@ public class Guest {
 		this.email = email;
 	}
 
+	public Guest() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Long getId() {
 		return id;
 	}
