@@ -25,7 +25,6 @@ public class GuestWebController {
 	private static final String GUEST_ATTRIBUTE = "guest";
 	private static final String GUESTS_ATTRIBUTE = "guests";
 
-	// --- LIST / READ ALL ---
 	@GetMapping
 	public String listGuests(Model model) {
 		List<Guest> allGuests = guestService.getAllGuests();
@@ -34,5 +33,34 @@ public class GuestWebController {
 		return "guest";
 	}
 
+	@GetMapping("/edit/{id}")
+	public String editGuest(@PathVariable long id, Model model) {
+		Guest guest = guestService.getGuestById(id);
+		model.addAttribute(GUEST_ATTRIBUTE, guest);
+		model.addAttribute(MESSAGE_ATTRIBUTE, guest == null ? "No guest found with id: " + id : "");
+		return "guest";
+	}
 
+	@GetMapping("/new")
+	public String newGuest(Model model) {
+		model.addAttribute(GUEST_ATTRIBUTE, new Guest());
+		model.addAttribute(MESSAGE_ATTRIBUTE, "");
+		return "guest";
+	}
+
+	@PostMapping("/save")
+	public String saveGuest(Guest guest) {
+		if (guest.getId() == null) {
+			guestService.insertNewGuest(guest);
+		} else {
+			guestService.updateGuestById(guest.getId(), guest);
+		}
+		return "redirect:/guests";
+	}
+
+	@DeleteMapping("/delete/{id}")
+	public String deleteGuest(@PathVariable long id) {
+		guestService.deleteGuestById(id);
+		return "redirect:/guests";
+	}
 }
