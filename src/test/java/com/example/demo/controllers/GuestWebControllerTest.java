@@ -67,7 +67,7 @@ class GuestWebControllerTest {
 		Guest guest = new Guest(1L, "Bob", "bob@example.com");
 		when(guestService.getGuestById(1L)).thenReturn(guest);
 
-		mvc.perform(get("/guests/edit/1")).andExpect(view().name("guest")).andExpect(model().attribute("guest", guest))
+		mvc.perform(get("/guests/edit/1")).andExpect(view().name("edit_guest")).andExpect(model().attribute("guest", guest))
 				.andExpect(model().attribute("message", ""));
 	}
 
@@ -75,7 +75,7 @@ class GuestWebControllerTest {
 	void test_EditGuest_WhenGuestIsNotFound() throws Exception {
 		when(guestService.getGuestById(1L)).thenReturn(null);
 
-		mvc.perform(get("/guests/edit/1")).andExpect(view().name("guest"))
+		mvc.perform(get("/guests/edit/1")).andExpect(view().name("edit_guest"))
 				.andExpect(model().attribute("guest", nullValue()))
 				.andExpect(model().attribute("message", "No guest found with id: 1"));
 	}

@@ -37,7 +37,7 @@ public class WeddingEventWebController {
 		WeddingEvent evt = weddingEventService.getEventById(id);
 		model.addAttribute(EVENT_ATTRIBUTE, evt);
 		model.addAttribute(MESSAGE_ATTRIBUTE, evt == null ? "No event found with id: " + id : "");
-		return "weddingevent";
+		return "edit_event";
 	}
 
 	@GetMapping("/new")

@@ -38,7 +38,7 @@ public class GuestWebController {
 		Guest guest = guestService.getGuestById(id);
 		model.addAttribute(GUEST_ATTRIBUTE, guest);
 		model.addAttribute(MESSAGE_ATTRIBUTE, guest == null ? "No guest found with id: " + id : "");
-		return "guest";
+		return "edit_guest";
 	}
 
 	@GetMapping("/new")

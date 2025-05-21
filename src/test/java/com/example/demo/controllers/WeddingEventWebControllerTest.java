@@ -69,7 +69,7 @@ class WeddingEventWebControllerTest {
 		WeddingEvent evt = new WeddingEvent(2L, "E2", LocalDate.of(2025, 11, 5), "Venice");
 		when(weddingEventService.getEventById(2L)).thenReturn(evt);
 
-		mvc.perform(get("/events/edit/2")).andExpect(view().name("weddingevent"))
+		mvc.perform(get("/events/edit/2")).andExpect(view().name("edit_event"))
 				.andExpect(model().attribute("event", evt)).andExpect(model().attribute("message", ""));
 	}
 
@@ -77,7 +77,7 @@ class WeddingEventWebControllerTest {
 	void test_EditEvent_WhenNotFound() throws Exception {
 		when(weddingEventService.getEventById(3L)).thenReturn(null);
 
-		mvc.perform(get("/events/edit/3")).andExpect(view().name("weddingevent"))
+		mvc.perform(get("/events/edit/3")).andExpect(view().name("edit_event"))
 				.andExpect(model().attribute("event", nullValue()))
 				.andExpect(model().attribute("message", "No event found with id: 3"));
 	}
