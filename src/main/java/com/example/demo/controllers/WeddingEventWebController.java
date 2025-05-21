@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.model.WeddingEvent;
@@ -27,6 +30,37 @@ public class WeddingEventWebController {
 		model.addAttribute(EVENTS_ATTRIBUTE, allEvents);
 		model.addAttribute(MESSAGE_ATTRIBUTE, allEvents.isEmpty() ? "No event" : "");
 		return "weddingevent";
+	}
+
+	@GetMapping("/edit/{id}")
+	public String editEvent(@PathVariable long id, Model model) {
+		WeddingEvent evt = weddingEventService.getEventById(id);
+		model.addAttribute(EVENT_ATTRIBUTE, evt);
+		model.addAttribute(MESSAGE_ATTRIBUTE, evt == null ? "No event found with id: " + id : "");
+		return "weddingevent";
+	}
+
+	@GetMapping("/new")
+	public String newEvent(Model model) {
+		model.addAttribute(EVENT_ATTRIBUTE, new WeddingEvent());
+		model.addAttribute(MESSAGE_ATTRIBUTE, "");
+		return "weddingevent";
+	}
+
+	@PostMapping("/save")
+	public String saveEvent(WeddingEvent event) {
+		if (event.getId() == null) {
+			weddingEventService.insertNewEvent(event);
+		} else {
+			weddingEventService.updateEventById(event.getId(), event);
+		}
+		return "redirect:/events";
+	}
+
+	@DeleteMapping("/delete/{id}")
+	public String deleteEvent(@PathVariable long id) {
+		weddingEventService.deleteEventById(id);
+		return "redirect:/events";
 	}
 
 }
