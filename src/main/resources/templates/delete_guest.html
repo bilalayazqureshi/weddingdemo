@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Guest Deleted</title>
+<link rel="stylesheet" href="/delete.css" />
+</head>
+<body>
+	<div class="container">
+		<h1 th:text="'Guest with ID ' + ${deletedId} + ' was deleted.'">Guest
+			Deleted</h1>
+
+		<div class="button-group">
+			<form th:action="@{/newGuest}" method="get" style="display: inline;">
+				<button type="submit" name="btn_new_guest" class="btn primary">New
+					Guest</button>
+			</form>
+
+			<form th:action="@{/guests}" method="get" style="display: inline;">
+				<button type="submit" name="btn_all_guests" class="btn secondary">All
+					Guests</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

@@ -67,8 +67,8 @@ class GuestWebControllerTest {
 		Guest guest = new Guest(1L, "Bob", "bob@example.com");
 		when(guestService.getGuestById(1L)).thenReturn(guest);
 
-		mvc.perform(get("/guests/edit/1")).andExpect(view().name("edit_guest")).andExpect(model().attribute("guest", guest))
-				.andExpect(model().attribute("message", ""));
+		mvc.perform(get("/guests/edit/1")).andExpect(view().name("edit_guest"))
+				.andExpect(model().attribute("guest", guest)).andExpect(model().attribute("message", ""));
 	}
 
 	@Test
@@ -82,7 +82,7 @@ class GuestWebControllerTest {
 
 	@Test
 	void test_EditNewGuest() throws Exception {
-		mvc.perform(get("/guests/new")).andExpect(view().name("guest"))
+		mvc.perform(get("/guests/new")).andExpect(view().name("edit_guest"))
 				.andExpect(model().attribute("guest", new Guest())).andExpect(model().attribute("message", ""));
 		verifyNoMoreInteractions(guestService);
 	}
@@ -106,8 +106,8 @@ class GuestWebControllerTest {
 
 	@Test
 	void test_DeleteGuest() throws Exception {
-		mvc.perform(delete("/guests/delete/3")).andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/guests"));
+		mvc.perform(get("/guests/delete/3")).andExpect(status().isOk()).andExpect(view().name("delete_guest"))
+				.andExpect(model().attribute("deletedId", 3L));
 
 		verify(guestService).deleteGuestById(3L);
 	}

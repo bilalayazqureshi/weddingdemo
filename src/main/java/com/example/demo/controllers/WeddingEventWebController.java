@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.model.WeddingEvent;
 import com.example.demo.services.WeddingEventService;
@@ -44,7 +45,7 @@ public class WeddingEventWebController {
 	public String newEvent(Model model) {
 		model.addAttribute(EVENT_ATTRIBUTE, new WeddingEvent());
 		model.addAttribute(MESSAGE_ATTRIBUTE, "");
-		return "index";
+		return "edit_event";
 	}
 
 	@PostMapping("/save")
@@ -54,13 +55,14 @@ public class WeddingEventWebController {
 		} else {
 			weddingEventService.updateEventById(event.getId(), event);
 		}
-		return "redirect:/index";
+		return "redirect:/";
 	}
 
-	@DeleteMapping("/delete/{id}")
-	public String deleteEvent(@PathVariable long id) {
+	@GetMapping("/delete/{id}")
+	public String deleteEvent(@PathVariable long id, Model model) {
 		weddingEventService.deleteEventById(id);
-		return "redirect:/index";
+		model.addAttribute("deletedId", id);
+		return "delete_event"; // Render confirmation page
 	}
 
 }

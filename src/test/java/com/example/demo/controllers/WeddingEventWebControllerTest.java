@@ -51,16 +51,15 @@ class WeddingEventWebControllerTest {
 		List<WeddingEvent> events = asList(new WeddingEvent(1L, "E1", LocalDate.of(2025, 10, 10), "Rome"));
 		when(weddingEventService.getAllEvents()).thenReturn(events);
 
-		mvc.perform(get("/")).andExpect(view().name("index"))
-				.andExpect(model().attribute("events", events)).andExpect(model().attribute("message", ""));
+		mvc.perform(get("/")).andExpect(view().name("index")).andExpect(model().attribute("events", events))
+				.andExpect(model().attribute("message", ""));
 	}
 
 	@Test
 	void test_ListView_ShowsMessageWhenNoEvents() throws Exception {
 		when(weddingEventService.getAllEvents()).thenReturn(emptyList());
 
-		mvc.perform(get("/")).andExpect(view().name("index"))
-				.andExpect(model().attribute("events", emptyList()))
+		mvc.perform(get("/")).andExpect(view().name("index")).andExpect(model().attribute("events", emptyList()))
 				.andExpect(model().attribute("message", "No event"));
 	}
 
@@ -69,8 +68,8 @@ class WeddingEventWebControllerTest {
 		WeddingEvent evt = new WeddingEvent(2L, "E2", LocalDate.of(2025, 11, 5), "Venice");
 		when(weddingEventService.getEventById(2L)).thenReturn(evt);
 
-		mvc.perform(get("/edit/2")).andExpect(view().name("edit_event"))
-				.andExpect(model().attribute("event", evt)).andExpect(model().attribute("message", ""));
+		mvc.perform(get("/edit/2")).andExpect(view().name("edit_event")).andExpect(model().attribute("event", evt))
+				.andExpect(model().attribute("message", ""));
 	}
 
 	@Test
@@ -84,7 +83,7 @@ class WeddingEventWebControllerTest {
 
 	@Test
 	void test_EditNewEvent() throws Exception {
-		mvc.perform(get("/new")).andExpect(view().name("index"))
+		mvc.perform(get("/new")).andExpect(view().name("edit_event"))
 				.andExpect(model().attribute("event", new WeddingEvent())).andExpect(model().attribute("message", ""));
 		verifyNoMoreInteractions(weddingEventService);
 	}
@@ -92,15 +91,15 @@ class WeddingEventWebControllerTest {
 	@Test
 	void test_PostEventWithoutId_ShouldInsertNewEvent() throws Exception {
 		mvc.perform(post("/save").param("name", "E3").param("date", "2025-12-12").param("location", "Milan"))
-				.andExpect(view().name("redirect:/index"));
+				.andExpect(view().name("redirect:/"));
 
 		verify(weddingEventService).insertNewEvent(new WeddingEvent(null, "E3", LocalDate.of(2025, 12, 12), "Milan"));
 	}
 
 	@Test
 	void test_PostEventWithId_ShouldUpdateExistingEvent() throws Exception {
-		mvc.perform(post("/save").param("id", "4").param("name", "E4").param("date", "2025-12-25")
-				.param("location", "Florence")).andExpect(view().name("redirect:/index"));
+		mvc.perform(post("/save").param("id", "4").param("name", "E4").param("date", "2025-12-25").param("location",
+				"Florence")).andExpect(view().name("redirect:/"));
 
 		verify(weddingEventService).updateEventById(4L,
 				new WeddingEvent(4L, "E4", LocalDate.of(2025, 12, 25), "Florence"));
@@ -108,8 +107,8 @@ class WeddingEventWebControllerTest {
 
 	@Test
 	void test_DeleteEvent() throws Exception {
-		mvc.perform(delete("/delete/5")).andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/index"));
+		mvc.perform(get("/delete/5")).andExpect(status().isOk()).andExpect(view().name("delete_event"))
+				.andExpect(model().attribute("deletedId", 5L));
 
 		verify(weddingEventService).deleteEventById(5L);
 	}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Wedding Events</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+	<div class="button-group">
+		<a th:href="@{/new}" class="btn secondary">New event</a> <a
+			th:href="@{/guests}" class="btn secondary">All Guests</a>
+	</div>
+	<!-- IF NO EVENT -->
+	<div th:if="${events.empty}">
+		<div>No event</div>
+	</div>
+
+	<!-- ELSE -->
+	<div th:unless="${events.empty}">
+		<table id="event_table">
+			<caption>Events</caption>
+			<thead>
+				<tr>
+					<th scope="col">ID</th>
+					<th scope="col">Name</th>
+					<th scope="col">Date</th>
+					<th scope="col">Location</th>
+					<th scope="col">Edit</th>
+					<th scope="col">Delete</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="event : ${events}">
+					<td th:text="${event.id}"></td>
+					<td th:text="${event.name}"></td>
+					<td th:text="${event.date}"></td>
+					<td th:text="${event.location}"></td>
+					<td><a th:href="@{/edit/{id}(id=${event.id})}"
+						class="btn secondary">Edit</a></td>
+					<td><a th:href="@{/delete/{id}(id=${event.id})}"
+						class="btn danger">Delete</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

@@ -45,7 +45,7 @@ public class GuestWebController {
 	public String newGuest(Model model) {
 		model.addAttribute(GUEST_ATTRIBUTE, new Guest());
 		model.addAttribute(MESSAGE_ATTRIBUTE, "");
-		return "guest";
+		return "edit_guest";
 	}
 
 	@PostMapping("/save")
@@ -58,9 +58,11 @@ public class GuestWebController {
 		return "redirect:/guests";
 	}
 
-	@DeleteMapping("/delete/{id}")
-	public String deleteGuest(@PathVariable long id) {
+	@GetMapping("/delete/{id}")
+	public String deleteGuest(@PathVariable long id, Model model) {
 		guestService.deleteGuestById(id);
-		return "redirect:/guests";
+		model.addAttribute("deletedId", id);
+		return "delete_guest";
 	}
+	
 }
