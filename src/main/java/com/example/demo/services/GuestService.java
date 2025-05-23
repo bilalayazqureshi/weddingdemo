@@ -1,6 +1,9 @@
 package com.example.demo.services;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -9,26 +12,41 @@ import com.example.demo.model.Guest;
 @Service
 public class GuestService {
 
-	private static final String TEMPORARY_IMPLEMENTATION = "Temporary implementation";
+	private final Map<Long, Guest> guests = new LinkedHashMap<>();
 
-	public Guest getGuestById(long id) {
-		throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
+	public GuestService() {
+		// seed with a couple of sample guests
+		guests.put(1L, new Guest(1L, "Alice", "alice@example.com"));
+		guests.put(2L, new Guest(2L, "Bob", "bob@example.com"));
 	}
 
-	public Guest insertNewGuest(Guest guest) {
-		throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
-	}
-
-	public Guest updateGuestById(long id, Guest updatedGuest) {
-		throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
-	}
-
-	public void deleteGuestById(long id) {
-		throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
-	}
-
+	/** List all guests in insertion order */
 	public List<Guest> getAllGuests() {
-		throw new UnsupportedOperationException(TEMPORARY_IMPLEMENTATION);
+		return new ArrayList<>(guests.values());
 	}
 
+	/** Lookup one by id, or return null if none */
+	public Guest getGuestById(long id) {
+		return guests.get(id);
+	}
+
+	/** Insert a new guest, auto-assigning a fresh id */
+	public Guest insertNewGuest(Guest guest) {
+		long newId = guests.size() + 1L;
+		guest.setId(newId);
+		guests.put(newId, guest);
+		return guest;
+	}
+
+	/** Overwrite an existing guest by id */
+	public Guest updateGuestById(long id, Guest replacement) {
+		replacement.setId(id);
+		guests.put(id, replacement);
+		return replacement;
+	}
+
+	/** Remove a guest by id */
+	public void deleteGuestById(long id) {
+		guests.remove(id);
+	}
 }
