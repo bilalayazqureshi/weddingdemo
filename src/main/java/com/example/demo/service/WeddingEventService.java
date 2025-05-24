@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.WeddingEvent;
-import com.example.demo.repository.WeddingEventRepository;
+import com.example.demo.repositories.WeddingEventRepository;
 
 @Service
 public class WeddingEventService {

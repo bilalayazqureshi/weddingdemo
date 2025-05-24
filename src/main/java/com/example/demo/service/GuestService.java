@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Guest;
-import com.example.demo.repository.GuestRepository;
+import com.example.demo.repositories.GuestRepository;
 
 @Service
 public class GuestService {

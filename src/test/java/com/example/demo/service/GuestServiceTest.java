@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.example.demo.model.Guest;
-import com.example.demo.repository.GuestRepository;
+import com.example.demo.repositories.GuestRepository;
 
 class GuestServiceTest {
 	@Mock

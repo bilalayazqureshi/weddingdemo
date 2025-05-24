@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.example.demo.model.WeddingEvent;
-import com.example.demo.repository.WeddingEventRepository;
+import com.example.demo.repositories.WeddingEventRepository;
 
 class WeddingEventServiceTest {
 
@@ -34,14 +35,14 @@ class WeddingEventServiceTest {
 
 	@Test
 	public void testGetWeddingEventById() {
-		WeddingEvent weddingEvent = new WeddingEvent(1L, "My Wedding", "2025-06-25", "Beachside Resort");
+		WeddingEvent weddingEvent = new WeddingEvent(1L, "My Wedding", LocalDate.of(2025, 1, 1), "Beachside Resort");
 		when(weddingEventRepository.findById(1L)).thenReturn(Optional.of(weddingEvent));
 
 		WeddingEvent result = weddingEventService.getWeddingEventById(1L);
 
 		assertNotNull(result);
 		assertEquals("My Wedding", result.getName());
-		assertEquals("2025-06-25", result.getDate());
+		assertEquals(LocalDate.of(2025, 1, 1), result.getDate());
 		assertEquals("Beachside Resort", result.getLocation());
 		verify(weddingEventRepository, times(1)).findById(1L);
 	}
@@ -58,8 +59,8 @@ class WeddingEventServiceTest {
 
 	@Test
 	public void testCreateWeddingEvent() {
-		WeddingEvent weddingEvent = new WeddingEvent(null, "Summer Wedding", "2025-07-25", "Mountain Resort");
-		WeddingEvent savedWeddingEvent = new WeddingEvent(1L, "Summer Wedding", "2025-07-25", "Mountain Resort");
+		WeddingEvent weddingEvent = new WeddingEvent(null, "Summer Wedding", LocalDate.of(2025, 1, 1), "Mountain Resort");
+		WeddingEvent savedWeddingEvent = new WeddingEvent(1L, "Summer Wedding", LocalDate.of(2025, 1, 1), "Mountain Resort");
 
 		when(weddingEventRepository.save(weddingEvent)).thenReturn(savedWeddingEvent);
 
@@ -67,15 +68,15 @@ class WeddingEventServiceTest {
 
 		assertNotNull(result);
 		assertEquals("Summer Wedding", result.getName());
-		assertEquals("2025-07-25", result.getDate());
+		assertEquals(LocalDate.of(2025, 1, 1), result.getDate());
 		assertEquals("Mountain Resort", result.getLocation());
 		verify(weddingEventRepository, times(1)).save(weddingEvent);
 	}
 
 	@Test
 	public void testUpdateWeddingEvent() {
-		WeddingEvent existingWeddingEvent = new WeddingEvent(1L, "My Wedding", "2025-06-25", "Beachside Resort");
-		WeddingEvent updatedWeddingEvent = new WeddingEvent(1L, "Updated Wedding", "2025-06-25", "Beachside Resort");
+		WeddingEvent existingWeddingEvent = new WeddingEvent(1L, "My Wedding", LocalDate.of(2025, 1, 1), "Beachside Resort");
+		WeddingEvent updatedWeddingEvent = new WeddingEvent(1L, "Updated Wedding", LocalDate.of(2025, 2, 1), "Beachside Resort");
 
 		when(weddingEventRepository.findById(1L)).thenReturn(Optional.of(existingWeddingEvent));
 		when(weddingEventRepository.save(updatedWeddingEvent)).thenReturn(updatedWeddingEvent);
@@ -99,8 +100,8 @@ class WeddingEventServiceTest {
 
 	@Test
 	public void testGetAllWeddingEvents() {
-		WeddingEvent weddingEvent1 = new WeddingEvent(1L, "Wedding 1", "2025-06-25", "Location 1");
-		WeddingEvent weddingEvent2 = new WeddingEvent(2L, "Wedding 2", "2025-07-25", "Location 2");
+		WeddingEvent weddingEvent1 = new WeddingEvent(1L, "Wedding 1", LocalDate.of(2025, 1, 1), "Location 1");
+		WeddingEvent weddingEvent2 = new WeddingEvent(2L, "Wedding 2", LocalDate.of(2025, 2, 23), "Location 2");
 		when(weddingEventRepository.findAll()).thenReturn(List.of(weddingEvent1, weddingEvent2));
 
 		List<WeddingEvent> weddingEvents = weddingEventService.getAllWeddingEvents();
