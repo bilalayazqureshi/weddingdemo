@@ -37,7 +37,7 @@ class WeddingEventRestControllerTest {
 	private WeddingEventService weddingEventService;
 
 	@Test
-	public void testAllWeddingEventsNotEmpty() throws Exception {
+	void testAllWeddingEventsNotEmpty() throws Exception {
 		// Mock service to return list of WeddingEvent
 		when(weddingEventService.getAllWeddingEvents())
 				.thenReturn(List.of(new WeddingEvent(1L, "Smith Wedding", LocalDate.of(2025, 1, 1), "New York"),
@@ -52,7 +52,7 @@ class WeddingEventRestControllerTest {
 	}
 
 	@Test
-	public void testOneWeddingEventByIdWithExistingEvent() throws Exception {
+	void testOneWeddingEventByIdWithExistingEvent() throws Exception {
 		when(weddingEventService.getWeddingEventById(anyLong()))
 				.thenReturn(new WeddingEvent(1L, "Smith Wedding", LocalDate.of(2025, 1, 1), "New York"));
 
@@ -62,7 +62,7 @@ class WeddingEventRestControllerTest {
 	}
 
 	@Test
-	public void testOneWeddingEventByIdWithNotFoundEvent() throws Exception {
+	void testOneWeddingEventByIdWithNotFoundEvent() throws Exception {
 		when(weddingEventService.getWeddingEventById(anyLong())).thenReturn(null);
 
 		this.mvc.perform(get("/api/weddingevents/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
@@ -70,7 +70,7 @@ class WeddingEventRestControllerTest {
 	}
 
 	@Test
-	public void testCreateWeddingEvent() throws Exception {
+	void testCreateWeddingEvent() throws Exception {
 		when(weddingEventService.insertNewWeddingEvent(any(WeddingEvent.class)))
 				.thenReturn(new WeddingEvent(3L, "Brown Wedding", LocalDate.of(2025, 8, 10), "Chicago"));
 
@@ -88,7 +88,7 @@ class WeddingEventRestControllerTest {
 	}
 
 	@Test
-	public void testUpdateWeddingEventExisting() throws Exception {
+	void testUpdateWeddingEventExisting() throws Exception {
 		when(weddingEventService.updateWeddingEventById(anyLong(), any(WeddingEvent.class)))
 				.thenReturn(new WeddingEvent(1L, "Smith Wedding VIP", LocalDate.of(2025, 06, 20), "New York"));
 
@@ -107,7 +107,7 @@ class WeddingEventRestControllerTest {
 	}
 
 	@Test
-	public void testUpdateWeddingEventNotFound() throws Exception {
+	void testUpdateWeddingEventNotFound() throws Exception {
 		when(weddingEventService.updateWeddingEventById(anyLong(), any(WeddingEvent.class))).thenReturn(null);
 
 		String updateJson = """
@@ -123,7 +123,7 @@ class WeddingEventRestControllerTest {
 	}
 
 	@Test
-	public void testDeleteWeddingEvent() throws Exception {
+	void testDeleteWeddingEvent() throws Exception {
 		doNothing().when(weddingEventService).deleteWeddingEventById(anyLong());
 
 		this.mvc.perform(delete("/api/weddingevents/1")).andExpect(status().isOk()).andExpect(content().string(""));

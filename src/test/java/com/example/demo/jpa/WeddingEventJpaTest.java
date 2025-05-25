@@ -19,7 +19,7 @@ class WeddingEventJpaTest {
 	private TestEntityManager entityManager;
 
 	@Test
-	public void testJpaMapping() {
+	void testJpaMapping() {
 		WeddingEvent saved = entityManager
 				.persistFlushFind(new WeddingEvent(null, "test",LocalDate.of(2025, 1, 1), "testLocation"));
 

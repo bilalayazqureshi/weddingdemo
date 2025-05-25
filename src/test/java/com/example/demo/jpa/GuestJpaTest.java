@@ -15,7 +15,7 @@ class GuestJpaTest {
 	private TestEntityManager entityManager;
 
 	@Test
-	public void testJpaMapping() {
+	void testJpaMapping() {
 		Guest saved = entityManager.persistFlushFind(new Guest(null, "test", "test@example.com"));
 
 		assertThat(saved.getName()).isEqualTo("test");

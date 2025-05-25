@@ -36,7 +36,7 @@ class GuestRestControllerTest {
 	private GuestService guestService; // Mocking the service
 
 	@Test
-	public void testAllGuestsNotEmpty() throws Exception {
+	void testAllGuestsNotEmpty() throws Exception {
 		// Mocking the service response
 		when(guestService.getAllGuests()).thenReturn(List.of(new Guest(1L, "John Doe", "john.doe@example.com"),
 				new Guest(2L, "Alice Smith", "alice.smith@example.com")));
@@ -48,7 +48,7 @@ class GuestRestControllerTest {
 	}
 
 	@Test
-	public void testOneGuestByIdWithExistingGuest() throws Exception {
+	void testOneGuestByIdWithExistingGuest() throws Exception {
 		when(guestService.getGuestById(anyLong())).thenReturn(new Guest(1L, "John Doe", "john.doe@example.com"));
 
 		this.mvc.perform(get("/api/guests/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
@@ -57,7 +57,7 @@ class GuestRestControllerTest {
 	}
 
 	@Test
-	public void testOneGuestByIdWithNotFoundGuest() throws Exception {
+	void testOneGuestByIdWithNotFoundGuest() throws Exception {
 		when(guestService.getGuestById(anyLong())).thenReturn(null);
 
 		this.mvc.perform(get("/api/guests/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
@@ -65,7 +65,7 @@ class GuestRestControllerTest {
 	}
 
 	@Test
-	public void testCreateGuest() throws Exception {
+	void testCreateGuest() throws Exception {
 		when(guestService.insertNewGuest(any(Guest.class)))
 				.thenReturn(new Guest(3L, "Bob Brown", "bob.brown@example.com"));
 
@@ -83,7 +83,7 @@ class GuestRestControllerTest {
 	}
 
 	@Test
-	public void testUpdateGuestExisting() throws Exception {
+	void testUpdateGuestExisting() throws Exception {
 		when(guestService.updateGuestById(anyLong(), any(Guest.class)))
 				.thenReturn(new Guest(1L, "John Doe Jr.", "john.jr@example.com"));
 
@@ -96,7 +96,7 @@ class GuestRestControllerTest {
 	}
 
 	@Test
-	public void testUpdateGuestNotFound() throws Exception {
+	void testUpdateGuestNotFound() throws Exception {
 		when(guestService.updateGuestById(anyLong(), any(Guest.class))).thenReturn(null);
 
 		String updateJson = "{\"name\":\"Nobody\",\"email\":\"none@example.com\"}";
@@ -106,7 +106,7 @@ class GuestRestControllerTest {
 	}
 
 	@Test
-	public void testDeleteGuest() throws Exception {
+	void testDeleteGuest() throws Exception {
 		doNothing().when(guestService).deleteGuestById(anyLong());
 
 		this.mvc.perform(delete("/api/guests/1")).andExpect(status().isOk()).andExpect(content().string(""));
