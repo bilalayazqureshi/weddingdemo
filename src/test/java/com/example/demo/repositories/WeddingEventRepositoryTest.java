@@ -24,7 +24,7 @@ class WeddingEventRepositoryTest {
 	private TestEntityManager entityManager;
 
 	@Test
-	public void firstLearningTest() {
+	void firstLearningTest() {
 		WeddingEvent event = new WeddingEvent(null, "test", LocalDate.of(2025, 1, 1), "testLocation");
 		WeddingEvent saved = repository.save(event);
 		Collection<WeddingEvent> events = repository.findAll();
@@ -32,7 +32,7 @@ class WeddingEventRepositoryTest {
 	}
 
 	@Test
-	public void secondLearningTest() {
+	void secondLearningTest() {
 		WeddingEvent event = new WeddingEvent(null, "test", LocalDate.of(2025, 1, 1), "testLocation");
 		WeddingEvent saved = entityManager.persistFlushFind(event);
 		Collection<WeddingEvent> events = repository.findAll();
@@ -40,7 +40,7 @@ class WeddingEventRepositoryTest {
 	}
 
 	@Test
-	public void test_findByTitle() {
+	void test_findByTitle() {
 		WeddingEvent saved = entityManager
 				.persistFlushFind(new WeddingEvent(null, "test", LocalDate.of(2025, 1, 1), "testLocation"));
 		WeddingEvent found = repository.findByName("test");
@@ -48,7 +48,7 @@ class WeddingEventRepositoryTest {
 	}
 
 	@Test
-	public void test_findByTitleAndLocation() {
+	void test_findByTitleAndLocation() {
 		entityManager.persistFlushFind(new WeddingEvent(null, "test", LocalDate.of(2025, 1, 1), "loc1"));
 		WeddingEvent evt = entityManager
 				.persistFlushFind(new WeddingEvent(null, "test", LocalDate.of(2025, 1, 1), "loc2"));
@@ -57,7 +57,7 @@ class WeddingEventRepositoryTest {
 	}
 
 	@Test
-	public void test_findByTitleOrLocation() {
+	void test_findByTitleOrLocation() {
 		WeddingEvent e1 = entityManager
 				.persistFlushFind(new WeddingEvent(null, "test", LocalDate.of(2025, 1, 1), "loc1"));
 		WeddingEvent e2 = entityManager
@@ -68,7 +68,7 @@ class WeddingEventRepositoryTest {
 	}
 
 	@Test
-	public void test_findAllByDateBefore() {
+	void test_findAllByDateBefore() {
 		WeddingEvent e1 = entityManager
 				.persistFlushFind(new WeddingEvent(null, "e1", LocalDate.of(2025, 1, 1), "loc1"));
 		WeddingEvent e2 = entityManager
@@ -79,7 +79,7 @@ class WeddingEventRepositoryTest {
 	}
 
 	@Test
-	public void testCreateEvent() {
+	void testCreateEvent() {
 		WeddingEvent event = new WeddingEvent(null, "alice", LocalDate.of(2025, 5, 20), "Rome");
 		WeddingEvent saved = repository.save(event);
 
@@ -89,7 +89,7 @@ class WeddingEventRepositoryTest {
 	}
 
 	@Test
-	public void testReadEventById() {
+	void testReadEventById() {
 		WeddingEvent event = entityManager
 				.persistFlushFind(new WeddingEvent(null, "bob", LocalDate.of(2025, 6, 15), "Venice"));
 
@@ -102,7 +102,7 @@ class WeddingEventRepositoryTest {
 	}
 
 	@Test
-	public void testUpdateEvent() {
+	void testUpdateEvent() {
 		WeddingEvent event = entityManager
 				.persistFlushFind(new WeddingEvent(null, "carol", LocalDate.of(2025, 7, 10), "Milan"));
 
@@ -118,7 +118,7 @@ class WeddingEventRepositoryTest {
 	}
 
 	@Test
-	public void testDeleteEvent() {
+	void testDeleteEvent() {
 		WeddingEvent event = entityManager
 				.persistFlushFind(new WeddingEvent(null, "dave", LocalDate.of(2025, 8, 5), "Florence"));
 

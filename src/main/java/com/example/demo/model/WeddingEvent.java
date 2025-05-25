@@ -31,7 +31,7 @@ public class WeddingEvent {
 	private List<Guest> guests = new ArrayList<>();
 
 	public WeddingEvent() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public WeddingEvent(Long id, String name, LocalDate date, String location) {

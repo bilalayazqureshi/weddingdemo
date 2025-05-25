@@ -21,7 +21,7 @@ class GuestRepositoryTest {
 	private TestEntityManager entityManager;
 
 	@Test
-	public void firstLearningTest() {
+	void firstLearningTest() {
 		Guest guest = new Guest(null, "test", "test@example.com");
 		Guest saved = repository.save(guest);
 		Collection<Guest> guests = repository.findAll();
@@ -29,7 +29,7 @@ class GuestRepositoryTest {
 	}
 
 	@Test
-	public void secondLearningTest() {
+	void secondLearningTest() {
 		Guest guest = new Guest(null, "test", "test@example.com");
 		Guest saved = entityManager.persistFlushFind(guest);
 		Collection<Guest> guests = repository.findAll();
@@ -37,14 +37,14 @@ class GuestRepositoryTest {
 	}
 
 	@Test
-	public void test_findByName() {
+	void test_findByName() {
 		Guest saved = entityManager.persistFlushFind(new Guest(null, "test", "test@example.com"));
 		Guest found = repository.findByName("test");
 		assertThat(found).isEqualTo(saved);
 	}
 
 	@Test
-	public void test_findByNameAndEmail() {
+	void test_findByNameAndEmail() {
 		entityManager.persistFlushFind(new Guest(null, "test", "test@example.com"));
 		Guest g = entityManager.persistFlushFind(new Guest(null, "test", "other@example.com"));
 		List<Guest> found = repository.findByNameAndEmail("test", "other@example.com");
@@ -52,7 +52,7 @@ class GuestRepositoryTest {
 	}
 
 	@Test
-	public void test_findByNameOrEmail() {
+	void test_findByNameOrEmail() {
 		Guest g1 = entityManager.persistFlushFind(new Guest(null, "test", "a@example.com"));
 		Guest g2 = entityManager.persistFlushFind(new Guest(null, "another", "b@example.com"));
 		entityManager.persistFlushFind(new Guest(null, "noMatch", "c@other.com"));
@@ -61,7 +61,7 @@ class GuestRepositoryTest {
 	}
 
 	@Test
-	public void test_findByEmailEndingWith() {
+	void test_findByEmailEndingWith() {
 		Guest g1 = entityManager.persistFlushFind(new Guest(null, "test", "a@example.com"));
 		Guest g2 = entityManager.persistFlushFind(new Guest(null, "another", "b@example.com"));
 		entityManager.persistFlushFind(new Guest(null, "no", "c@other.com"));

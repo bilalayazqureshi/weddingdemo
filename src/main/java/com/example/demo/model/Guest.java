@@ -28,7 +28,7 @@ public class Guest {
 	}
 	
 	public Guest() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Long getId() {
