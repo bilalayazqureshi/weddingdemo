@@ -1,24 +1,25 @@
 package com.example.demo.model;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 
 @Entity
 public class Guest {
 
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 	private String email;
 	
 	@ManyToMany(mappedBy = "guests")
-	private Set<WeddingEvent> events = new HashSet<>();
+	private List<WeddingEvent> weddingEvents = new ArrayList<>();
 
 	public Guest(Long id, String name, String email) {
 		this.id = id;

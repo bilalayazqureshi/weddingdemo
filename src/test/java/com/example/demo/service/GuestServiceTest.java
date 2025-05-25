@@ -1,8 +1,10 @@
 package com.example.demo.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -13,6 +15,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -106,5 +109,39 @@ class GuestServiceTest {
 		assertNotNull(guests);
 		assertEquals(2, guests.size());
 		verify(guestRepository, times(1)).findAll();
+	}
+
+	@Test
+	void insertNewGuest_mustNullOutId_beforeCallingSave() {
+		// given a guest that already has an ID
+		Guest input = new Guest(99L, "Jane Smith", "jane@example.com");
+		Guest saved = new Guest(1L, "Jane Smith", "jane@example.com");
+		when(guestRepository.save(any())).thenReturn(saved);
+
+		// when
+		Guest result = guestService.insertNewGuest(input);
+
+		// then: the repository must have been called with id == null
+		ArgumentCaptor<Guest> captor = ArgumentCaptor.forClass(Guest.class);
+		verify(guestRepository).save(captor.capture());
+		assertThat(captor.getValue().getId()).isNull(); // kills the setId(null) mutant
+		assertThat(result).isSameAs(saved);
+	}
+
+	@Test
+	void updateGuestById_mustSetCorrectId_beforeCallingSave() {
+		// given an input guest without ID
+		Guest input = new Guest(null, "Bob", "bob@example.com");
+		Guest saved = new Guest(5L, "Bob", "bob@example.com");
+		when(guestRepository.save(any())).thenReturn(saved);
+
+		// when
+		Guest result = guestService.updateGuestById(5L, input);
+
+		// then: repository.save must receive a Guest with id == 5L
+		ArgumentCaptor<Guest> captor = ArgumentCaptor.forClass(Guest.class);
+		verify(guestRepository).save(captor.capture());
+		assertThat(captor.getValue().getId()).isEqualTo(5L); // kills the setId(id) mutant
+		assertThat(result).isSameAs(saved);
 	}
 }

@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,26 +9,26 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "wedding_event")
 public class WeddingEvent {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate date;
 	private String location;
+
 	@ManyToMany
 	@JoinTable(name = "event_guest", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "guest_id"))
-	private List<Guest> guests;
+	private List<Guest> guests = new ArrayList<>();
 
 	public WeddingEvent() {
 		// TODO Auto-generated constructor stub
