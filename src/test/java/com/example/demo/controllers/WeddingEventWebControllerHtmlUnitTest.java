@@ -22,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.example.demo.model.WeddingEvent;
+import com.example.demo.services.GuestService;
 import com.example.demo.services.WeddingEventService;
 
 @WebMvcTest(controllers = WeddingEventWebController.class)
@@ -30,8 +31,13 @@ class WeddingEventWebControllerHtmlUnitTest {
 	@Autowired
 	private WebClient webClient;
 
+	@SuppressWarnings("removal")
 	@MockBean
 	private WeddingEventService weddingEventService;
+
+	@SuppressWarnings("removal")
+	@MockBean
+	private GuestService guestService;
 
 	@Test
 	void test_HomePageTitle() throws Exception {
@@ -55,17 +61,24 @@ class WeddingEventWebControllerHtmlUnitTest {
 
 	@Test
 	void test_HomePageWithEvents_ShouldShowThemInATable() throws Exception {
+		// given
 		WeddingEvent e1 = new WeddingEvent(1L, "E1", LocalDate.of(2025, 10, 10), "Rome");
 		WeddingEvent e2 = new WeddingEvent(2L, "E2", LocalDate.of(2025, 11, 11), "Venice");
 		when(weddingEventService.getAllEvents()).thenReturn(asList(e1, e2));
 
+		// when
 		HtmlPage page = webClient.getPage("/");
+
+		// then
 		assertThat(page.getBody().getTextContent()).doesNotContain("No event");
 
 		HtmlTable table = page.getHtmlElementById("event_table");
 		String normalized = removeWindowsCR(table.asNormalizedText());
-		assertThat(normalized).isEqualTo("Events\n" + "ID\tName\tDate\tLocation\tEdit\tDelete\n"
-				+ "1\tE1\t2025-10-10\tRome\tEdit\tDelete\n" + "2\tE2\t2025-11-11\tVenice\tEdit\tDelete");
+
+		assertThat(normalized).isEqualTo("Events\n" + "ID\tName\tDate\tLocation\tGuests\tEdit\tDelete\n"
+				+ "1\tE1\t2025-10-10\tRome\t0 guest\tEdit\tDelete\n"
+				+ "2\tE2\t2025-11-11\tVenice\t0 guest\tEdit\tDelete");
+
 		page.getAnchorByHref("/edit/1");
 		page.getAnchorByHref("/edit/2");
 	}

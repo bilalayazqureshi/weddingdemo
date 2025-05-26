@@ -49,4 +49,14 @@ public class GuestService {
 	public void deleteGuestById(long id) {
 		guests.remove(id);
 	}
+
+	public List<Guest> findGuestsForEvent(long eventId) {
+		List<Guest> result = new ArrayList<>();
+		for (Guest g : guests.values()) {
+			if (g.getEvent() != null && g.getEvent().getId().equals(eventId)) {
+				result.add(g);
+			}
+		}
+		return result;
+	}
 }

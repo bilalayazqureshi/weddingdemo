@@ -20,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.example.demo.model.Guest;
 import com.example.demo.services.GuestService;
+import com.example.demo.services.WeddingEventService;
 
 @WebMvcTest(controllers = GuestWebController.class)
 class GuestWebControllerHtmlUnitTest {
@@ -27,8 +28,13 @@ class GuestWebControllerHtmlUnitTest {
 	@Autowired
 	private WebClient webClient;
 
+	@SuppressWarnings("removal")
 	@MockBean
 	private GuestService guestService;
+
+	@SuppressWarnings("removal")
+	@MockBean
+	private WeddingEventService weddingEventService;
 
 	@Test
 	void test_HomePageTitle() throws Exception {
@@ -51,17 +57,22 @@ class GuestWebControllerHtmlUnitTest {
 
 	@Test
 	void test_HomePageWithGuests_ShouldShowThemInATable() throws Exception {
+		// given
 		Guest g1 = new Guest(1L, "Alice", "alice@example.com");
 		Guest g2 = new Guest(2L, "Bob", "bob@example.com");
 		when(guestService.getAllGuests()).thenReturn(asList(g1, g2));
 
+		// when
 		HtmlPage page = webClient.getPage("/guests");
+
+		// then
 		assertThat(page.getBody().getTextContent()).doesNotContain("No guest");
 
 		HtmlTable table = page.getHtmlElementById("guest_table");
 		String normalized = removeWindowsCR(table.asNormalizedText());
-		assertThat(normalized).isEqualTo("Guests\n" + "ID\tName\tEmail\tEdit\tDelete\n"
-				+ "1\tAlice\talice@example.com\tEdit\tDelete\n" + "2\tBob\tbob@example.com\tEdit\tDelete");
+
+		assertThat(normalized).isEqualTo("Guests\n" + "ID\tName\tEmail\tEvent\tEdit\tDelete\n"
+				+ "1\tAlice\talice@example.com\t—\tEdit\tDelete\n" + "2\tBob\tbob@example.com\t—\tEdit\tDelete");
 
 		page.getAnchorByHref("/guests/edit/1");
 		page.getAnchorByHref("/guests/edit/2");

@@ -30,6 +30,17 @@
 						th:field="*{email}" />
 				</p>
 
+				<p>
+					<label for="event">Event:</label>
+					<!-- bind only the nested id -->
+					<select id="event" th:field="*{event.id}" required>
+						<option th:value="" disabled th:if="${guest.event == null}">
+							-- select an event --</option>
+						<option th:each="evt : ${events}" th:value="${evt.id}"
+							th:text="${evt.name}"></option>
+					</select>
+				</p>
+
 				<button type="submit" name="btn_submit" class="btn primary">Save</button>
 			</form>
 		</div>

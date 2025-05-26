@@ -7,6 +7,7 @@ public class Guest {
 	private Long id;
 	private String name;
 	private String email;
+	private WeddingEvent event;
 
 	public Guest(Long id, String name, String email) {
 		this.id = id;
@@ -15,7 +16,6 @@ public class Guest {
 	}
 
 	public Guest() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public Long getId() {
@@ -62,5 +62,13 @@ public class Guest {
 			return false;
 		Guest other = (Guest) obj;
 		return Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(email, other.email);
+	}
+
+	public WeddingEvent getEvent() {
+		return event;
+	}
+
+	public void setEvent(WeddingEvent event) {
+		this.event = event;
 	}
 }

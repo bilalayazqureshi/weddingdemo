@@ -2,11 +2,11 @@ package com.example.demo.controllers;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -14,17 +14,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.demo.model.Guest;
+import com.example.demo.model.WeddingEvent;
 import com.example.demo.services.GuestService;
+import com.example.demo.services.WeddingEventService;
 
 @WebMvcTest(controllers = GuestWebController.class)
 class GuestWebControllerTest {
@@ -32,8 +37,13 @@ class GuestWebControllerTest {
 	@Autowired
 	private MockMvc mvc;
 
+	@SuppressWarnings("removal")
 	@MockBean
 	private GuestService guestService;
+
+	@SuppressWarnings("removal")
+	@MockBean
+	private WeddingEventService weddingEventService;
 
 	@Test
 	void testStatus200_ListView() throws Exception {
@@ -111,5 +121,24 @@ class GuestWebControllerTest {
 
 		verify(guestService).deleteGuestById(3L);
 	}
+
+
+	@Test
+	void saveGuest_withEvent_performsLookupAndSetsRealEvent() throws Exception {
+		WeddingEvent e = new WeddingEvent(2L, "Test Event", LocalDate.of(2025, 7, 20), "Venice");
+		when(weddingEventService.getEventById(2L)).thenReturn(e);
+
+		mvc.perform(post("/guests/save").contentType(MediaType.APPLICATION_FORM_URLENCODED).param("name", "Alice")
+				.param("email", "alice@example.com").param("event.id", "2")).andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/guests"));
+
+		ArgumentCaptor<Guest> capt = ArgumentCaptor.forClass(Guest.class);
+		verify(guestService).insertNewGuest(capt.capture());
+		Guest saved = capt.getValue();
+
+		assertThat(saved.getEvent()).isSameAs(e);
+	}
+
+	
 
 }

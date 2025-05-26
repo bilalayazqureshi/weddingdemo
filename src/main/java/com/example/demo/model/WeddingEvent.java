@@ -10,7 +10,7 @@ public class WeddingEvent {
 	private String name;
 	private LocalDate date;
 	private String location;
-	private List<Guest> guests;
+	private List<Guest> guest;
 
 	public WeddingEvent(Long id, String name, LocalDate date, String location) {
 		this.id = id;
@@ -37,10 +37,6 @@ public class WeddingEvent {
 		return location;
 	}
 
-	public List<Guest> getGuests() {
-		return guests;
-	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -57,9 +53,6 @@ public class WeddingEvent {
 		this.location = location;
 	}
 
-	public void setGuests(List<Guest> guests) {
-		this.guests = guests;
-	}
 
 	@Override
 	public String toString() {
@@ -83,4 +76,11 @@ public class WeddingEvent {
 		return Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(date, other.date)
 				&& Objects.equals(location, other.location);
 	}
+	public List<Guest> getGuest() {
+		return guest;
+	}
+	public void setGuest(List<Guest> list) {
+		this.guest = list;
+	}
+
 }

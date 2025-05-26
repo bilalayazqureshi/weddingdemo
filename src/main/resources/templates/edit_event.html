@@ -36,6 +36,14 @@
 
 				<button type="submit" name="btn_submit" class="btn primary">Save</button>
 			</form>
+
+			<div th:if="${event.guest}">
+				<h2>Attending Guests</h2>
+				<ul>
+					<li th:each="g : ${event.guest}"><strong th:text="${g.name}">Guest
+							Name</strong> (<span th:text="${g.email}">guest@example.com</span>)</li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </body>

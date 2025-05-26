@@ -5,14 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.model.Guest;
+import com.example.demo.model.WeddingEvent;
 import com.example.demo.services.GuestService;
+import com.example.demo.services.WeddingEventService;
 
 @Controller
 @RequestMapping("/guests")
@@ -20,6 +21,9 @@ public class GuestWebController {
 
 	@Autowired
 	private GuestService guestService;
+
+	@Autowired
+	private WeddingEventService weddingEventService;
 
 	private static final String MESSAGE_ATTRIBUTE = "message";
 	private static final String GUEST_ATTRIBUTE = "guest";
@@ -36,7 +40,9 @@ public class GuestWebController {
 	@GetMapping("/edit/{id}")
 	public String editGuest(@PathVariable long id, Model model) {
 		Guest guest = guestService.getGuestById(id);
+		List<WeddingEvent> weddingEvent = weddingEventService.getAllEvents();
 		model.addAttribute(GUEST_ATTRIBUTE, guest);
+		model.addAttribute("events", weddingEvent);
 		model.addAttribute(MESSAGE_ATTRIBUTE, guest == null ? "No guest found with id: " + id : "");
 		return "edit_guest";
 	}
@@ -44,12 +50,21 @@ public class GuestWebController {
 	@GetMapping("/new")
 	public String newGuest(Model model) {
 		model.addAttribute(GUEST_ATTRIBUTE, new Guest());
+		List<WeddingEvent> weddingEvent = weddingEventService.getAllEvents();
+		model.addAttribute("events", weddingEvent);
 		model.addAttribute(MESSAGE_ATTRIBUTE, "");
 		return "edit_guest";
 	}
 
 	@PostMapping("/save")
 	public String saveGuest(Guest guest) {
+		// guest.getEvent().getId() is now non-null
+		if (guest.getEvent() != null && guest.getEvent().getId() != null) {
+			// look up the real event object
+			WeddingEvent e = weddingEventService.getEventById(guest.getEvent().getId());
+			guest.setEvent(e);
+		}
+
 		if (guest.getId() == null) {
 			guestService.insertNewGuest(guest);
 		} else {
@@ -64,5 +79,5 @@ public class GuestWebController {
 		model.addAttribute("deletedId", id);
 		return "delete_guest";
 	}
-	
+
 }

@@ -189,6 +189,14 @@
 					</execution>
 				</executions>
 				<configuration>
+					<targetClasses>
+						<param>
+							com.example.demo.controllers.*</param>
+					</targetClasses>
+					<targetTests>
+						<param>
+							com.example.demo.controllers.*</param>
+					</targetTests>
 					<testPlugin>junit5</testPlugin>
 					<verbose>true</verbose>
 					<mutators>
