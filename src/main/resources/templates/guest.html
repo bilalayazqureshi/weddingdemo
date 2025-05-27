@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Guests</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+	<div class="button-group">
+		<a th:href="@{/guests/new}" class="btn secondary">New guest</a> <a
+			th:href="@{/}" class="btn secondary">All Events</a>
+	</div>
+	<!-- IF NO GUEST -->
+	<div th:if="${guests.empty}">
+		<div>No guest</div>
+	</div>
+
+	<!-- ELSE -->
+	<div th:unless="${guests.empty}">
+		<table id="guest_table">
+			<caption>Guests</caption>
+			<thead>
+				<tr>
+					<th scope="col">ID</th>
+					<th scope="col">Name</th>
+					<th scope="col">Email</th>
+					<th scope="col">Event</th>
+					<th scope="col">Edit</th>
+					<th scope="col">Delete</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="guest : ${guests}">
+					<td th:text="${guest.id}"></td>
+					<td th:text="${guest.name}"></td>
+					<td th:text="${guest.email}"></td>
+					<td th:text="${guest.event != null ? guest.event.name : '—'}"></td>
+					<td><a th:href="@{/guests/edit/{id}(id=${guest.id})}"
+						class="btn secondary">Edit</a></td>
+					<td><a th:href="@{/guests/delete/{id}(id=${guest.id})}"
+						class="btn danger">Delete</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

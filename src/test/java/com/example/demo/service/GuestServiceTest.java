@@ -10,6 +10,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +36,7 @@ class GuestServiceTest {
 	}
 
 	@Test
-	public void testGetGuestById() {
+	void testGetGuestById() {
 		Guest guest = new Guest(1L, "John Doe", "johndoe@example.com");
 		when(guestRepository.findById(1L)).thenReturn(Optional.of(guest));
 
@@ -48,7 +49,7 @@ class GuestServiceTest {
 	}
 
 	@Test
-	public void testGetGuestByIdNotFound() {
+	void testGetGuestByIdNotFound() {
 		when(guestRepository.findById(1L)).thenReturn(Optional.empty());
 
 		Guest result = guestService.getGuestById(1L);
@@ -58,7 +59,7 @@ class GuestServiceTest {
 	}
 
 	@Test
-	public void testInsertNewGuest() {
+	void testInsertNewGuest() {
 		Guest guest = new Guest(null, "Jane Smith", "janesmith@example.com");
 		Guest savedGuest = new Guest(1L, "Jane Smith", "janesmith@example.com");
 
@@ -73,7 +74,7 @@ class GuestServiceTest {
 	}
 
 	@Test
-	public void testUpdateGuest() {
+	void testUpdateGuest() {
 		Guest existingGuest = new Guest(1L, "John Doe", "johndoe@example.com");
 		Guest updatedGuest = new Guest(1L, "John Doe Updated", "johndoeupdated@example.com");
 
@@ -89,7 +90,7 @@ class GuestServiceTest {
 	}
 
 	@Test
-	public void testDeleteGuest() {
+	void testDeleteGuest() {
 		long id = 1L;
 		doNothing().when(guestRepository).deleteById(id);
 
@@ -99,7 +100,7 @@ class GuestServiceTest {
 	}
 
 	@Test
-	public void testGetAllGuests() {
+	void testGetAllGuests() {
 		Guest guest1 = new Guest(1L, "Wedding Guest 1", "guest1@example.com");
 		Guest guest2 = new Guest(2L, "Wedding Guest 2", "guest2@example.com");
 		when(guestRepository.findAll()).thenReturn(List.of(guest1, guest2));
@@ -143,5 +144,25 @@ class GuestServiceTest {
 		verify(guestRepository).save(captor.capture());
 		assertThat(captor.getValue().getId()).isEqualTo(5L); // kills the setId(id) mutant
 		assertThat(result).isSameAs(saved);
+	}
+
+	@Test
+	void findGuestsForEvent_returnsAllGuestsForThatEvent() {
+		Guest g1 = new Guest(1L, "Alice", "alice@example.com");
+		Guest g2 = new Guest(2L, "Bob", "bob@example.com");
+		when(guestRepository.findByEventId(42L)).thenReturn(List.of(g1, g2));
+
+		List<Guest> result = guestService.findGuestsForEvent(42L);
+
+		assertThat(result).containsExactly(g1, g2);
+	}
+
+	@Test
+	void findGuestsForEvent_returnsEmptyListWhenNone() {
+		when(guestRepository.findByEventId(13L)).thenReturn(Collections.emptyList());
+
+		List<Guest> result = guestService.findGuestsForEvent(13L);
+
+		assertThat(result).isEmpty();
 	}
 }

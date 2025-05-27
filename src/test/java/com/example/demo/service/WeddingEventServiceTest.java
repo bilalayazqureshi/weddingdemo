@@ -31,13 +31,13 @@ class WeddingEventServiceTest {
 	private WeddingEventService weddingEventService;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		MockitoAnnotations.openMocks(this);
 		weddingEventService = new WeddingEventService(weddingEventRepository);
 	}
 
 	@Test
-	public void testGetWeddingEventById() {
+	void testGetWeddingEventById() {
 		WeddingEvent weddingEvent = new WeddingEvent(1L, "My Wedding", LocalDate.of(2025, 1, 1), "Beachside Resort");
 		when(weddingEventRepository.findById(1L)).thenReturn(Optional.of(weddingEvent));
 
@@ -51,7 +51,7 @@ class WeddingEventServiceTest {
 	}
 
 	@Test
-	public void testGetWeddingEventByIdNotFound() {
+	void testGetWeddingEventByIdNotFound() {
 		when(weddingEventRepository.findById(1L)).thenReturn(Optional.empty());
 
 		WeddingEvent result = weddingEventService.getWeddingEventById(1L);
@@ -61,7 +61,7 @@ class WeddingEventServiceTest {
 	}
 
 	@Test
-	public void testCreateWeddingEvent() {
+	void testCreateWeddingEvent() {
 		WeddingEvent weddingEvent = new WeddingEvent(null, "Summer Wedding", LocalDate.of(2025, 1, 1),
 				"Mountain Resort");
 		WeddingEvent savedWeddingEvent = new WeddingEvent(1L, "Summer Wedding", LocalDate.of(2025, 1, 1),
@@ -79,7 +79,7 @@ class WeddingEventServiceTest {
 	}
 
 	@Test
-	public void testUpdateWeddingEvent() {
+	void testUpdateWeddingEvent() {
 		WeddingEvent existingWeddingEvent = new WeddingEvent(1L, "My Wedding", LocalDate.of(2025, 1, 1),
 				"Beachside Resort");
 		WeddingEvent updatedWeddingEvent = new WeddingEvent(1L, "Updated Wedding", LocalDate.of(2025, 2, 1),
@@ -96,7 +96,7 @@ class WeddingEventServiceTest {
 	}
 
 	@Test
-	public void testDeleteWeddingEvent() {
+	void testDeleteWeddingEvent() {
 		long id = 1L;
 		doNothing().when(weddingEventRepository).deleteById(id);
 
@@ -106,7 +106,7 @@ class WeddingEventServiceTest {
 	}
 
 	@Test
-	public void testGetAllWeddingEvents() {
+	void testGetAllWeddingEvents() {
 		WeddingEvent weddingEvent1 = new WeddingEvent(1L, "Wedding 1", LocalDate.of(2025, 1, 1), "Location 1");
 		WeddingEvent weddingEvent2 = new WeddingEvent(2L, "Wedding 2", LocalDate.of(2025, 2, 23), "Location 2");
 		when(weddingEventRepository.findAll()).thenReturn(List.of(weddingEvent1, weddingEvent2));
@@ -119,7 +119,7 @@ class WeddingEventServiceTest {
 	}
 
 	@Test
-	public void testInsertNewWeddingEvent_setsNullIdBeforeSave() {
+	void testInsertNewWeddingEvent_setsNullIdBeforeSave() {
 		WeddingEvent input = new WeddingEvent(99L, "Temp", LocalDate.of(2025, 8, 8), "Temp Place");
 		WeddingEvent saved = new WeddingEvent(1L, "Temp", LocalDate.of(2025, 8, 8), "Temp Place");
 
@@ -134,7 +134,7 @@ class WeddingEventServiceTest {
 	}
 
 	@Test
-	public void testUpdateWeddingEventById_setsCorrectIdBeforeSave() {
+	void testUpdateWeddingEventById_setsCorrectIdBeforeSave() {
 		WeddingEvent updated = new WeddingEvent(null, "Revised", LocalDate.of(2025, 9, 9), "Revised Place");
 		WeddingEvent saved = new WeddingEvent(7L, "Revised", LocalDate.of(2025, 9, 9), "Revised Place");
 

@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.model.Guest;
 
-public interface GuestRepository extends JpaRepository<Guest, Long>{
+public interface GuestRepository extends JpaRepository<Guest, Long> {
 
 	Guest findByName(String string);
 
@@ -16,5 +16,6 @@ public interface GuestRepository extends JpaRepository<Guest, Long>{
 
 	List<Guest> findByEmailEndingWith(String string);
 
+	List<Guest> findByEventId(Long eventId);
 
 }

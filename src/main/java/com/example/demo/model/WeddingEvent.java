@@ -1,34 +1,33 @@
 package com.example.demo.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class WeddingEvent {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
 	private Long id;
 	private String name;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate date;
 	private String location;
 
-	@ManyToMany
-	@JoinTable(name = "event_guest", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "guest_id"))
-	private List<Guest> guests = new ArrayList<>();
+	@OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Guest> guest;
 
 	public WeddingEvent() {
 
@@ -57,10 +56,6 @@ public class WeddingEvent {
 		return location;
 	}
 
-	public List<Guest> getGuests() {
-		return guests;
-	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -75,10 +70,6 @@ public class WeddingEvent {
 
 	public void setLocation(String location) {
 		this.location = location;
-	}
-
-	public void setGuests(List<Guest> guests) {
-		this.guests = guests;
 	}
 
 	@Override
@@ -103,4 +94,13 @@ public class WeddingEvent {
 		return Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(date, other.date)
 				&& Objects.equals(location, other.location);
 	}
+
+	public List<Guest> getGuest() {
+		return guest;
+	}
+
+	public void setGuest(List<Guest> list) {
+		this.guest = list;
+	}
+
 }
