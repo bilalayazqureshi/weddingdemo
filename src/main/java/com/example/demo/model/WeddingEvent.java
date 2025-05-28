@@ -26,7 +26,7 @@ public class WeddingEvent {
 	private LocalDate date;
 	private String location;
 
-	@OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
 	private List<Guest> guest;
 
 	public WeddingEvent() {
