@@ -44,4 +44,9 @@ public class WeddingEventService {
 	public List<WeddingEvent> getAllWeddingEvents() {
 		return weddingEventRepository.findAll(); // Fetch all wedding events
 	}
+
+	public List<WeddingEvent> getAllEventsWithGuests() {
+		return weddingEventRepository.findAllWithGuests();
+	}
+
 }

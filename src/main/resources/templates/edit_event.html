@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Edit Wedding Event</title>
+<link rel="stylesheet" href="/edit.css" />
+</head>
+<body>
+	<div class="container">
+		<h1>Edit Wedding Event</h1>
+
+		<!-- Displaying a message if present -->
+		<div th:unless="${message.empty}" class="message">
+			<span th:text="${message}"></span>
+		</div>
+
+		<!-- Displaying the form if event is not null -->
+		<div th:if="${message.empty}">
+			<form name="event_record" action="#" th:action="@{/save}"
+				th:object="${event}" method="post" class="form">
+				<!-- Hidden field for the event's identifier -->
+				<input type="hidden" th:field="*{id}" />
+
+				<p>
+					<label for="name">Name:</label> <input type="text" id="name"
+						th:field="*{name}" />
+				</p>
+				<p>
+					<label for="date">Date:</label> <input type="date" id="date"
+						th:field="*{date}" />
+				</p>
+				<p>
+					<label for="location">Location:</label> <input type="text"
+						id="location" th:field="*{location}" />
+				</p>
+
+				<button type="submit" name="btn_submit" class="btn primary">Save</button>
+			</form>
+
+			<div th:if="${event.guest}">
+				<h2>Attending Guests</h2>
+				<ul>
+					<li th:each="g : ${event.guest}"><strong th:text="${g.name}">Guest
+							Name</strong> (<span th:text="${g.email}">guest@example.com</span>)</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,32 +1,34 @@
 package com.example.demo.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Guest {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 	private String email;
-	
-	@ManyToMany(mappedBy = "guests")
-	private List<WeddingEvent> weddingEvents = new ArrayList<>();
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "event_id")
+	private WeddingEvent event;
 
 	public Guest(Long id, String name, String email) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
 	}
-	
+
 	public Guest() {
 
 	}
@@ -75,5 +77,13 @@ public class Guest {
 			return false;
 		Guest other = (Guest) obj;
 		return Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(email, other.email);
+	}
+
+	public WeddingEvent getEvent() {
+		return event;
+	}
+
+	public void setEvent(WeddingEvent e) {
+		this.event = e;
 	}
 }

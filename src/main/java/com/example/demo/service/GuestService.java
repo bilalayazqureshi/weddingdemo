@@ -14,7 +14,7 @@ import jakarta.transaction.Transactional;
 public class GuestService {
 
 	private final GuestRepository guestRepository;
-	
+
 	public GuestService(GuestRepository guestRepository) {
 		this.guestRepository = guestRepository;
 	}
@@ -50,5 +50,10 @@ public class GuestService {
 	@Transactional
 	public List<Guest> getAllGuests() {
 		return guestRepository.findAll(); // Fetch all guests
+	}
+
+	@Transactional
+	public List<Guest> findGuestsForEvent(Long eventId) {
+		return guestRepository.findByEventId(eventId);
 	}
 }

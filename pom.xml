@@ -140,6 +140,24 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.htmlunit</groupId>
+			<artifactId>htmlunit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>htmlunit-driver</artifactId>
+			<version>4.13.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-support</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -217,13 +235,13 @@
 						<param>
 							com.example.demo.service.*</param>
 						<param>
-							com.example.demo.controller.*</param>
+							com.example.demo.controllers.*</param>
 					</targetClasses>
 					<targetTests>
 						<param>
 							com.example.demo.service.*</param>
 						<param>
-							com.example.demo.controller.*</param>
+							com.example.demo.controllers.*</param>
 					</targetTests>
 					<testPlugin>junit5</testPlugin>
 					<verbose>true</verbose>
@@ -249,6 +267,7 @@
 						<excludes>
 							<exclude>**/*Application.*</exclude>
 							<exclude>**/model/*</exclude>
+							<exclude>**/services/*</exclude>
 						</excludes>
 						<rules>
 							<rule>

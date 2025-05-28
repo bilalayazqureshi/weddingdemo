@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +21,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.example.demo.model.Guest;
 import com.example.demo.model.WeddingEvent;
+import com.example.demo.repositories.GuestRepository;
 import com.example.demo.repositories.WeddingEventRepository;
 
 class WeddingEventServiceTest {
@@ -28,16 +31,19 @@ class WeddingEventServiceTest {
 	@Mock
 	private WeddingEventRepository weddingEventRepository;
 
+	@Mock
+	private GuestRepository guestRepository;
+
 	private WeddingEventService weddingEventService;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		MockitoAnnotations.openMocks(this);
 		weddingEventService = new WeddingEventService(weddingEventRepository);
 	}
 
 	@Test
-	public void testGetWeddingEventById() {
+	void testGetWeddingEventById() {
 		WeddingEvent weddingEvent = new WeddingEvent(1L, "My Wedding", LocalDate.of(2025, 1, 1), "Beachside Resort");
 		when(weddingEventRepository.findById(1L)).thenReturn(Optional.of(weddingEvent));
 
@@ -51,7 +57,7 @@ class WeddingEventServiceTest {
 	}
 
 	@Test
-	public void testGetWeddingEventByIdNotFound() {
+	void testGetWeddingEventByIdNotFound() {
 		when(weddingEventRepository.findById(1L)).thenReturn(Optional.empty());
 
 		WeddingEvent result = weddingEventService.getWeddingEventById(1L);
@@ -61,7 +67,7 @@ class WeddingEventServiceTest {
 	}
 
 	@Test
-	public void testCreateWeddingEvent() {
+	void testCreateWeddingEvent() {
 		WeddingEvent weddingEvent = new WeddingEvent(null, "Summer Wedding", LocalDate.of(2025, 1, 1),
 				"Mountain Resort");
 		WeddingEvent savedWeddingEvent = new WeddingEvent(1L, "Summer Wedding", LocalDate.of(2025, 1, 1),
@@ -79,7 +85,7 @@ class WeddingEventServiceTest {
 	}
 
 	@Test
-	public void testUpdateWeddingEvent() {
+	void testUpdateWeddingEvent() {
 		WeddingEvent existingWeddingEvent = new WeddingEvent(1L, "My Wedding", LocalDate.of(2025, 1, 1),
 				"Beachside Resort");
 		WeddingEvent updatedWeddingEvent = new WeddingEvent(1L, "Updated Wedding", LocalDate.of(2025, 2, 1),
@@ -96,7 +102,7 @@ class WeddingEventServiceTest {
 	}
 
 	@Test
-	public void testDeleteWeddingEvent() {
+	void testDeleteWeddingEvent() {
 		long id = 1L;
 		doNothing().when(weddingEventRepository).deleteById(id);
 
@@ -106,7 +112,7 @@ class WeddingEventServiceTest {
 	}
 
 	@Test
-	public void testGetAllWeddingEvents() {
+	void testGetAllWeddingEvents() {
 		WeddingEvent weddingEvent1 = new WeddingEvent(1L, "Wedding 1", LocalDate.of(2025, 1, 1), "Location 1");
 		WeddingEvent weddingEvent2 = new WeddingEvent(2L, "Wedding 2", LocalDate.of(2025, 2, 23), "Location 2");
 		when(weddingEventRepository.findAll()).thenReturn(List.of(weddingEvent1, weddingEvent2));
@@ -119,7 +125,7 @@ class WeddingEventServiceTest {
 	}
 
 	@Test
-	public void testInsertNewWeddingEvent_setsNullIdBeforeSave() {
+	void testInsertNewWeddingEvent_setsNullIdBeforeSave() {
 		WeddingEvent input = new WeddingEvent(99L, "Temp", LocalDate.of(2025, 8, 8), "Temp Place");
 		WeddingEvent saved = new WeddingEvent(1L, "Temp", LocalDate.of(2025, 8, 8), "Temp Place");
 
@@ -134,7 +140,7 @@ class WeddingEventServiceTest {
 	}
 
 	@Test
-	public void testUpdateWeddingEventById_setsCorrectIdBeforeSave() {
+	void testUpdateWeddingEventById_setsCorrectIdBeforeSave() {
 		WeddingEvent updated = new WeddingEvent(null, "Revised", LocalDate.of(2025, 9, 9), "Revised Place");
 		WeddingEvent saved = new WeddingEvent(7L, "Revised", LocalDate.of(2025, 9, 9), "Revised Place");
 
@@ -146,6 +152,46 @@ class WeddingEventServiceTest {
 		verify(weddingEventRepository).save(captor.capture());
 		assertThat(captor.getValue().getId()).isEqualTo(7L); // 💥 Kills the mutant removing setId(id)
 		assertThat(result).isEqualTo(saved);
+	}
+
+	@Test
+	void testGetAllEventsWithGuests_returnsPopulatedList() {
+		// given
+		WeddingEvent e1 = new WeddingEvent(1L, "Party", LocalDate.of(2025, 4, 4), "Oslo");
+		Guest g1 = new Guest(10L, "Alice", "alice@ex.com");
+		g1.setEvent(e1);
+		Guest g2 = new Guest(11L, "Bob", "bob@ex.com");
+		g2.setEvent(e1);
+		e1.setGuest(List.of(g1, g2));
+
+		when(weddingEventRepository.findAllWithGuests()).thenReturn(List.of(e1));
+
+		// when
+		List<WeddingEvent> result = weddingEventService.getAllEventsWithGuests();
+
+		// then
+		assertNotNull(result);
+		assertEquals(1, result.size());
+		WeddingEvent fetched = result.get(0);
+		assertEquals(1L, fetched.getId());
+		assertEquals("Party", fetched.getName());
+		assertNotNull(fetched.getGuest());
+		assertEquals(2, fetched.getGuest().size());
+		verify(weddingEventRepository, times(1)).findAllWithGuests();
+	}
+
+	@Test
+	void testGetAllEventsWithGuests_returnsEmptyList() {
+		// given
+		when(weddingEventRepository.findAllWithGuests()).thenReturn(Collections.emptyList());
+
+		// when
+		List<WeddingEvent> result = weddingEventService.getAllEventsWithGuests();
+
+		// then
+		assertNotNull(result);
+		assertEquals(0, result.size());
+		verify(weddingEventRepository, times(1)).findAllWithGuests();
 	}
 
 }

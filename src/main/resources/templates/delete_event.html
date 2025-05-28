@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Event Deleted</title>
+<link rel="stylesheet" href="/delete.css" />
+</head>
+<body>
+	<div class="container">
+		<h1 th:text="'Event with ID ' + ${deletedId} + ' was deleted.'">Event
+			Deleted</h1>
+
+		<div class="button-group">
+			<form th:action="@{/new}" method="get" style="display: inline;">
+				<button type="submit" name="btn_new_event" class="btn primary">New
+					event</button>
+			</form>
+
+			<form th:action="@{/}" method="get" style="display: inline;">
+				<button type="submit" name="btn_all_events" class="btn secondary">All
+					events</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

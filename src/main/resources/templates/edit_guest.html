@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Edit Guest</title>
+<link rel="stylesheet" href="/edit.css" />
+</head>
+<body>
+	<div class="container">
+		<h1>Edit Guest</h1>
+
+		<!-- Displaying a message if present -->
+		<div th:unless="${message.empty}" class="message">
+			<span th:text="${message}"></span>
+		</div>
+
+		<!-- Displaying the form if no message -->
+		<div th:if="${message.empty}">
+			<form name="guest_record" th:action="@{/guests/save}"
+				th:object="${guest}" method="post" class="form">
+				<!-- Hidden field for the guest's ID -->
+				<input type="hidden" th:field="*{id}" />
+
+				<p>
+					<label for="name">Name:</label> <input type="text" id="name"
+						th:field="*{name}" />
+				</p>
+				<p>
+					<label for="email">Email:</label> <input type="email" id="email"
+						th:field="*{email}" />
+				</p>
+
+				<p>
+					<label for="event">Event:</label>
+					<!-- bind only the nested id -->
+					<select id="event" th:field="*{event.id}" required>
+						<option th:value="" disabled th:if="${guest.event == null}">
+							-- select an event --</option>
+						<option th:each="evt : ${events}" th:value="${evt.id}"
+							th:text="${evt.name}"></option>
+					</select>
+				</p>
+
+				<button type="submit" name="btn_submit" class="btn primary">Save</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
