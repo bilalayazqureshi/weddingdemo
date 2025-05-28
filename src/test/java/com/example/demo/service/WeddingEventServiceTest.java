@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,13 +21,18 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.example.demo.model.Guest;
 import com.example.demo.model.WeddingEvent;
+import com.example.demo.repositories.GuestRepository;
 import com.example.demo.repositories.WeddingEventRepository;
 
 class WeddingEventServiceTest {
 
 	@Mock
 	private WeddingEventRepository weddingEventRepository;
+
+	@Mock
+	private GuestRepository guestRepository;
 
 	private WeddingEventService weddingEventService;
 
@@ -146,6 +152,46 @@ class WeddingEventServiceTest {
 		verify(weddingEventRepository).save(captor.capture());
 		assertThat(captor.getValue().getId()).isEqualTo(7L); // 💥 Kills the mutant removing setId(id)
 		assertThat(result).isEqualTo(saved);
+	}
+
+	@Test
+	void testGetAllEventsWithGuests_returnsPopulatedList() {
+		// given
+		WeddingEvent e1 = new WeddingEvent(1L, "Party", LocalDate.of(2025, 4, 4), "Oslo");
+		Guest g1 = new Guest(10L, "Alice", "alice@ex.com");
+		g1.setEvent(e1);
+		Guest g2 = new Guest(11L, "Bob", "bob@ex.com");
+		g2.setEvent(e1);
+		e1.setGuest(List.of(g1, g2));
+
+		when(weddingEventRepository.findAllWithGuests()).thenReturn(List.of(e1));
+
+		// when
+		List<WeddingEvent> result = weddingEventService.getAllEventsWithGuests();
+
+		// then
+		assertNotNull(result);
+		assertEquals(1, result.size());
+		WeddingEvent fetched = result.get(0);
+		assertEquals(1L, fetched.getId());
+		assertEquals("Party", fetched.getName());
+		assertNotNull(fetched.getGuest());
+		assertEquals(2, fetched.getGuest().size());
+		verify(weddingEventRepository, times(1)).findAllWithGuests();
+	}
+
+	@Test
+	void testGetAllEventsWithGuests_returnsEmptyList() {
+		// given
+		when(weddingEventRepository.findAllWithGuests()).thenReturn(Collections.emptyList());
+
+		// when
+		List<WeddingEvent> result = weddingEventService.getAllEventsWithGuests();
+
+		// then
+		assertNotNull(result);
+		assertEquals(0, result.size());
+		verify(weddingEventRepository, times(1)).findAllWithGuests();
 	}
 
 }
