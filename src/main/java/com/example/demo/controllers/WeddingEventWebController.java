@@ -2,7 +2,6 @@ package com.example.demo.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +20,14 @@ public class WeddingEventWebController {
 	private static final String EVENT_ATTRIBUTE = "event";
 	private static final String EVENTS_ATTRIBUTE = "events";
 
-	@Autowired
 	private WeddingEventService weddingEventService;
 
-	@Autowired
 	private GuestService guestService;
+
+	public WeddingEventWebController(GuestService guestService, WeddingEventService weddingEventService) {
+		this.guestService = guestService;
+		this.weddingEventService = weddingEventService;
+	}
 
 	@GetMapping
 	public String listEvents(Model model) {
@@ -67,7 +69,7 @@ public class WeddingEventWebController {
 	public String deleteEvent(@PathVariable long id, Model model) {
 		weddingEventService.deleteWeddingEventById(id);
 		model.addAttribute("deletedId", id);
-		return "delete_event"; 
+		return "delete_event";
 	}
 
 }

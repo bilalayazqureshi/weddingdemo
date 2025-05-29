@@ -2,7 +2,6 @@ package com.example.demo.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +18,11 @@ import com.example.demo.service.WeddingEventService;
 @RequestMapping("/api/weddingevents")
 public class WeddingEventRestController {
 
-	@Autowired
 	private WeddingEventService weddingEventService;
+
+	public WeddingEventRestController(WeddingEventService weddingEventService) {
+		this.weddingEventService = weddingEventService;
+	}
 
 	@GetMapping
 	public List<WeddingEvent> allWeddingEvents() {
