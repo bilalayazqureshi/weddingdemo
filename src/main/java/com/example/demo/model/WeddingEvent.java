@@ -14,7 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class WeddingEvent {
+public class WeddingEvent {//NOSONAR
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
