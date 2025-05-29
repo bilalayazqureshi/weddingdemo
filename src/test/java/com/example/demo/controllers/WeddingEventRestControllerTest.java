@@ -24,7 +24,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.example.demo.controllers.WeddingEventRestController;
 import com.example.demo.model.WeddingEvent;
 import com.example.demo.service.WeddingEventService;
 
@@ -34,6 +33,7 @@ class WeddingEventRestControllerTest {
 	@Autowired
 	private MockMvc mvc;
 
+	@SuppressWarnings("removal")
 	@MockBean
 	private WeddingEventService weddingEventService;
 

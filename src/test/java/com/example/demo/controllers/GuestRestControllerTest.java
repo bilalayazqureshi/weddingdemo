@@ -23,7 +23,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.example.demo.controllers.GuestRestController;
 import com.example.demo.model.Guest;
 import com.example.demo.service.GuestService;
 
@@ -33,8 +32,9 @@ class GuestRestControllerTest {
 	@Autowired
 	private MockMvc mvc;
 
+	@SuppressWarnings("removal")
 	@MockBean
-	private GuestService guestService; // Mocking the service
+	private GuestService guestService; 
 
 	@Test
 	void testAllGuestsNotEmpty() throws Exception {
