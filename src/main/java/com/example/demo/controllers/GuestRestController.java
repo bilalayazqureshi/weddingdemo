@@ -2,7 +2,6 @@ package com.example.demo.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +18,11 @@ import com.example.demo.service.GuestService;
 @RequestMapping("/api/guests")
 public class GuestRestController {
 
-	@Autowired
 	private GuestService guestService;
+
+	public GuestRestController(GuestService guestService) {
+		this.guestService = guestService;
+	}
 
 	@GetMapping
 	public List<Guest> allGuests() {

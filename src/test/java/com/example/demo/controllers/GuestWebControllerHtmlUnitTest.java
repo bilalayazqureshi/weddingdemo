@@ -71,8 +71,11 @@ class GuestWebControllerHtmlUnitTest {
 		HtmlTable table = page.getHtmlElementById("guest_table");
 		String normalized = removeWindowsCR(table.asNormalizedText());
 
-		assertThat(normalized).isEqualTo("Guests\n" + "ID\tName\tEmail\tEvent\tEdit\tDelete\n"
-				+ "1\tAlice\talice@example.com\t—\tEdit\tDelete\n" + "2\tBob\tbob@example.com\t—\tEdit\tDelete");
+		assertThat(normalized).isEqualTo("""
+				Guests
+				ID\tName\tEmail\tEvent\tEdit\tDelete
+				1\tAlice\talice@example.com\t—\tEdit\tDelete
+				2\tBob\tbob@example.com\t—\tEdit\tDelete""");
 
 		page.getAnchorByHref("/guests/edit/1");
 		page.getAnchorByHref("/guests/edit/2");

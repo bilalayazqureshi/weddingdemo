@@ -75,9 +75,11 @@ class WeddingEventWebControllerHtmlUnitTest {
 		HtmlTable table = page.getHtmlElementById("event_table");
 		String normalized = removeWindowsCR(table.asNormalizedText());
 
-		assertThat(normalized).isEqualTo("Events\n" + "ID\tName\tDate\tLocation\tGuests\tEdit\tDelete\n"
-				+ "1\tE1\t2025-10-10\tRome\t0 guest\tEdit\tDelete\n"
-				+ "2\tE2\t2025-11-11\tVenice\t0 guest\tEdit\tDelete");
+		assertThat(normalized).isEqualTo("""
+				Events
+				ID\tName\tDate\tLocation\tGuests\tEdit\tDelete
+				1\tE1\t2025-10-10\tRome\t0 guest\tEdit\tDelete
+				2\tE2\t2025-11-11\tVenice\t0 guest\tEdit\tDelete""");
 
 		page.getAnchorByHref("/edit/1");
 		page.getAnchorByHref("/edit/2");

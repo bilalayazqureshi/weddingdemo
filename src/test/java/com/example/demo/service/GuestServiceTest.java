@@ -30,7 +30,7 @@ class GuestServiceTest {
 	private GuestService guestService;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		MockitoAnnotations.openMocks(this);
 		guestService = new GuestService(guestRepository);
 	}
