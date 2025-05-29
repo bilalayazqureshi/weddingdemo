@@ -59,7 +59,7 @@
 			java:S7027
 		</sonar.issue.ignore.multicriteria.e12.ruleKey>
 		<sonar.issue.ignore.multicriteria.e12.resourceKey>
-			**/*Guest.java
+			**/model/*
 		</sonar.issue.ignore.multicriteria.e12.resourceKey>
 	</properties>
 	<dependencies>
