@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+   mysql-e2e:
+      image: mysql:5.7
+      container_name: mysql-e2e
+      environment:
+         MYSQL_DATABASE: weddingdemo
+         MYSQL_USER: sa
+         MYSQL_PASSWORD: dbpass
+         MYSQL_ROOT_PASSWORD: secret
+      ports:
+      - 3306:3306
